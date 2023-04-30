@@ -87,4 +87,3 @@ class TransacaoCofrinho(db.Model):
    
     def __repr__(self):
         return f'<Transação Cofrinho: {self.tip_transacao} | Data: {self.dat_transacao}> | Valor: {self.val_cofrinho}'
-    
