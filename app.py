@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 import os
 
 #caminho relativo
@@ -14,3 +15,4 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #cria extensões
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
