@@ -15,11 +15,14 @@ app.config['SECRET_KEY'] = 'hard to guess stringgggg'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
 #cria extensões
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+
+#define a view responsável por login e ajuda a previnir o roubo da sessão do usuário
+login_manager.login_view = 'auth.login'
+login_manager.session_protection = 'strong'
 
 @login_manager.user_loader
 def load_user(user_id):
