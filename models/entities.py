@@ -1,4 +1,4 @@
-from app import db
+from app import db, bcrypt
 
 #criação das tabelas
 class Usuario(db.Model):
@@ -19,6 +19,9 @@ class Usuario(db.Model):
 
     def __repr__(self):
         return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real}>'
+    
+    def verify_password(self, password):
+        return bcrypt.check_password_hash(self.password,password)
     
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'
