@@ -6,7 +6,7 @@ auth = Blueprint('auth', __name__)
 #views responsáveis pela autorização
 
 @auth.route('/login', methods=['GET', 'POST'])
-def login():
+def entrar():
     ...
 
 @auth.route('/signup', methods=['GET', 'POST'])
