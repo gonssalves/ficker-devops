@@ -4,12 +4,15 @@ from flask_login import login_user
 from app import db, bcrypt
 from email_validator import validate_email, EmailNotValidError
 import re
+from email.message import EmailMessage
+import smtplib
+import ssl
 
 def auth_login():
     '''' Verifica se o usuário existe no banco de dados e se a senha está correta. '''
     username = request.form.get('username')
     password = request.form.get('password')
-    remember_me = request.form.get('remember_me')
+    remember_me = (True if request.form.get('remember_me') else False)
 
     #verifica se o usuário existe no banco de dados
     user = Usuario.query.filter_by(nom_usuario=username).first()#retorna none se não existir tal usuário
@@ -21,15 +24,56 @@ def auth_login():
     req.pop('submit')
 
     if user:
-        if user.verify_password(password):
-            login_user(user, remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
+        if password == user.password or user.verify_password(password):
+            login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
             return redirect(request.args.get('next') or url_for('main.home'))
     flash('Nome de usuário ou senha inválido')
     return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
     #TODO: pesquisar sobre os parâmetros do url_for
 
 def auth_recovery():
-    ...
+    email = request.form.get('email')
+
+    req = request.form.copy()
+    req.pop('csrf_token')
+    req.pop('submit')
+
+    try:
+        emailinfo = validate_email(email, check_deliverability=True)#check_deliverability DNS queries are made to check that the domain name in the email address (the part after the @-sign) can receive mail
+        email = emailinfo.normalized#
+    except EmailNotValidError as e:
+        flash(str(e))
+        return redirect(url_for('auth.account_recovery', **req))
+    
+    user = Usuario.query.filter_by(email=email).first()
+
+    if user:
+        password = user.password
+        #Define email sender and receiver
+        email_sender = ''
+        email_password = ''
+        email_receiver = email
+
+        #Set the subject and body of the email
+        subject = 'Recuperar Senha!'
+        body = f'Use essa senha para logar em sua conta: {password}'
+
+        em = EmailMessage()
+        em['From'] = email_sender
+        em['To'] = email_receiver
+        em['Subject'] = subject
+        em.set_content(body)
+        
+        # Add SSL (layer of security)
+        context = ssl.create_default_context()
+
+        # Log in and send the email
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+            smtp.login(email_sender, email_password)
+            smtp.sendmail(email_sender, email_receiver, em.as_string())
+
+    flash('Se esse email estiver registrado, você receberá um email. Verifique sua caixa de spam.')
+    return redirect(url_for('auth.account_recovery'))
 
 def auth_signup():
     ''' Valida as informações enviadas e registra o usuário. '''
