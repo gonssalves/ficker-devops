@@ -3,6 +3,7 @@ from flask import request, redirect, url_for, flash
 from flask_login import login_user
 from app import db, bcrypt
 from email_validator import validate_email, EmailNotValidError
+import re
 
 def auth_login():
     '''' Verifica se o usuário existe no banco de dados e se a senha está correta. '''
@@ -52,6 +53,10 @@ def auth_signup():
         flash(str(e))
         return redirect(url_for('auth.signup', **req))
     
+    if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password):
+        flash('A senha precisa conter ao menos uma letra, um número e um caractere especial')
+        return redirect(url_for('auth.signup', **req))
+    
     if password != password2:
         flash('As senhas precisam ser iguais')
         return redirect(url_for('auth.signup', **req))
@@ -66,6 +71,7 @@ def auth_signup():
 
     if verify_username:
         flash('Usuário já está cadastrado')
+
 
     password = bcrypt.generate_password_hash(password).decode('utf-8')#gera hash da senha
 
