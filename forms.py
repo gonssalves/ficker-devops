@@ -9,13 +9,14 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Entrar')
 
 class SignupForm(FlaskForm):
-    real_name = StringField(validatos=[InputRequired()])
-    username = StringField(validatos=[InputRequired()])
+    real_name = StringField(validatos=[InputRequired(), Length(3)])
+    username = StringField(validatos=[InputRequired(), Length(3)])
     email = StringField(validators=[InputRequired()])
-    password = PasswordField(validators=[InputRequired()])
+    password = PasswordField(validators=[InputRequired(), Length(8)])
     password2 = PasswordField(validators=[InputRequired()])
     submit = SubmitField('Cadastrar-se')
 
 class RecoveryForm(FlaskForm):
     email = StringField(validators=[InputRequired()])
     submit = SubmitField('Enviar')
+
