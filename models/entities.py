@@ -45,6 +45,9 @@ class TransacaoEntrada(db.Model):
     def __repr__(self):
         return f'<Transação Entrada: {self.dsc_entrada} | Data: {self.dat_entrada} | Valor: {self.val_entrada}>'
     
+    def show_all():
+        return TransacaoEntrada.query.all()
+
 class TransacaoSaida(db.Model):
     __tablename__ = 'transacoes_saida'
     id = db.Column(db.Integer, primary_key=True)
