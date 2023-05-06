@@ -12,12 +12,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'hard to guess stringgggg'
+from secret import SECRET_KEY, EMAIL_SENDER, EMAIL_PASSWORD
+
+app.config['SECRET_KEY'] = SECRET_KEY
 #configura o SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from secret import EMAIL_SENDER, EMAIL_PASSWORD
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = EMAIL_SENDER
