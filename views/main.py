@@ -15,7 +15,9 @@ def home():
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():
-    return render_template('entradas.html')
+    from models.entities import TransacaoEntrada
+    all_incomes = TransacaoEntrada.show_all()
+    return render_template('entradas.html', all_incomes=all_incomes)
 
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
