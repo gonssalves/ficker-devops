@@ -9,11 +9,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Entrar')
 
 class SignupForm(FlaskForm):
-<<<<<<< HEAD
     real_name = StringField('Nome Real', validators=[InputRequired(message='Campo em branco')])
-=======
-    real_name = StringField('Nome Real', validatos=[InputRequired(message='Campo em branco')])
->>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
     username = StringField(
         validators=[
             InputRequired(), 
@@ -32,9 +28,4 @@ class SignupForm(FlaskForm):
 
 class RecoveryForm(FlaskForm):
     email = StringField(validators=[InputRequired(message='Campo em branco')])
-<<<<<<< HEAD
     submit = SubmitField('Enviar')
-=======
-    submit = SubmitField('Enviar')
-
->>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
