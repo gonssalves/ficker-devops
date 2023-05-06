@@ -10,7 +10,6 @@ import ssl
 
 def auth_login():
     '''' Verifica se o usuário existe no banco de dados e se a senha está correta. '''
-    print(Usuario.query.all())
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = (True if request.form.get('remember_me') else False)

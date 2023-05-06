@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/f06c9cfd-985d-4c27-91e2-17fb25920adf/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/ficker",
+    "appService.deploySubpath": "."
+}
