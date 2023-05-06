@@ -18,8 +18,8 @@ class Usuario(db.Model, UserMixin):
     objetivos_u = db.relationship('Objetivo', backref='usuario', lazy=True)
     transacoes_cofrinho_u = db.relationship('TransacaoCofrinho', backref='usuario', lazy=True)
 
-    def __repr__(self):
-        return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real} | Email: {self.eml_usuario} | Senha: {self.sen_usuario}>'
+    # def __repr__(self):
+    #     return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real} | Email: {self.eml_usuario} | Senha: {self.sen_usuario}>'
     
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.sen_usuario,password)
@@ -46,10 +46,10 @@ class TransacaoEntrada(db.Model):
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     
-    categoria_nome = db.relationship('Categoria', backref='transacoes_entrada', lazy=True)
+    categoria_nome = db.relationship('Categoria', backref='transacoes_entrada', lazy=True, viewonly=True)
 
-    def __repr__(self):
-        return f'<Transação Entrada: {self.dsc_entrada} | Data: {self.dat_entrada} | Valor: {self.val_entrada}>'
+    # def __repr__(self):
+    #     return f'<Transação Entrada: {self.dsc_entrada} | Data: {self.dat_entrada} | Valor: {self.val_entrada}>'
     
     def show_all():
         return TransacaoEntrada.query.all()
@@ -68,8 +68,8 @@ class TransacaoSaida(db.Model):
     val_saida = db.Column(db.Float(64))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
 
-    def __repr__(self):
-        return f'<Transação Saída: {self.dsc_saida} | Data: {self.dat_saida} | Valor: {self.val_saida}>'
+    # def __repr__(self):
+    #     return f'<Transação Saída: {self.dsc_saida} | Data: {self.dat_saida} | Valor: {self.val_saida}>'
 
 class Categoria(db.Model):
     __tablename__ = 'categorias'
@@ -79,8 +79,8 @@ class Categoria(db.Model):
 
     transacoes_entrada_c = db.relationship('TransacaoEntrada', backref='categoria', lazy=True)
 
-    def __repr__(self):
-        return f'<Categoria: {self.dsc_categoria}>'
+    # def __repr__(self):
+    #     return f'<Categoria: {self.dsc_categoria}>'
     
 class Objetivo(db.Model):
     __tablename__ = 'objetivos'
@@ -91,8 +91,8 @@ class Objetivo(db.Model):
    
     transacoes_cofrinho_o = db.relationship('TransacaoCofrinho', backref='objetivo', lazy=True)
 
-    def __repr__(self):
-        return f'<Objetivo: {self.dsc_objetivo} | Cor: {self.cor_objetivo}>'
+    # def __repr__(self):
+    #     return f'<Objetivo: {self.dsc_objetivo} | Cor: {self.cor_objetivo}>'
     
 class TransacaoCofrinho(db.Model):
     __tablename__ = 'transacoes_cofrinho'
@@ -103,5 +103,5 @@ class TransacaoCofrinho(db.Model):
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_objetivo = db.Column(db.Integer, db.ForeignKey('objetivos.id'))
    
-    def __repr__(self):
-        return f'<Transação Cofrinho: {self.tip_transacao} | Data: {self.dat_transacao}> | Valor: {self.val_cofrinho}'
+    # def __repr__(self):
+    #     return f'<Transação Cofrinho: {self.tip_transacao} | Data: {self.dat_transacao}> | Valor: {self.val_cofrinho}'
