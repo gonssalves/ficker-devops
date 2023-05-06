@@ -17,18 +17,11 @@ app.config['SECRET_KEY'] = 'hard to guess stringgggg'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-<<<<<<< HEAD
 from secret import EMAIL_SENDER, EMAIL_PASSWORD
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = EMAIL_SENDER
 app.config['MAIL_PASSWORD'] = EMAIL_PASSWORD
-=======
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = ''
-app.config['MAIL_PASSWORD'] = ''
->>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
 app.config['MAIL_TLS'] = True
 app.config['MAIL_SSL'] = False
 
@@ -50,8 +43,4 @@ def load_user(user_id):
 
 #registra o blueprint (blueprints lidam com as rotas)
 app.register_blueprint(view_main)
-<<<<<<< HEAD
 app.register_blueprint(view_auth)
-=======
-app.register_blueprint(view_auth)
->>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
