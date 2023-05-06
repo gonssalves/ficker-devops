@@ -22,51 +22,51 @@
             <img src="../static/assets/img/icons/icon-notificacao.svg" alt="">
           </div>
           <div class="flex incomes-center">
-            <img src="../static/assets/img/user.png" alt="Foto do usuário" class="w-6 h-6 rounded-full mr-1">
-            <p class="text-sm text-gray-800">John Doe</p>
+            <img src="../static/assets/img/user.png" alt="" class="w-6 h-6 rounded-full mr-1">
+            <p class="text-sm text-gray-800">Zé Ninguém</p>
           </div>
         </div>
     </header>
       <div class="sidebar bg-white w-64 h-screen fixed left-0 z-10">
         <ul class="mt-6">
-          <li class="p-3 rounded-lg font-semibold bg-red-500">
-            <a href="index.html" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+          <li class="p-3 rounded-lg">
+            <a href="{{url_for('main.home')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-inicio.svg" alt="logo">              
                Início
             </a>
           </li>
-          <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+          <li class="p-3 rounded-lg  font-semibold bg-red-500">
+            <a href="{{url_for('main.incomes')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
             <img class="mr-2" src="../static/assets/img/icons/icon-entradas.svg" alt="logo">
               Entradas
             </a>
           </li>
           <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+            <a href="{{url_for('main.expenses')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-saidas.svg" alt="logo">
               Saídas
             </a>
           </li>
           <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+            <a href="{{url_for('main.budgets')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-cofrinho.svg" alt="logo">
               Cofrinho
             </a>
           </li>
           <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+            <a href="{{url_for('main.analyzes')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-analises.svg" alt="logo">
               Análises
             </a>
           </li>
           <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+            <a href="{{url_for('main.profile')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-perfil.svg" alt="logo">
               Meu Perfil
             </a>
           </li>
           <li class="p-3 rounded-lg">
-            <a href="#" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
+            <a href="{{url_for('main.settings')}}" class="flex incomes-center text-gray-400 hover:text-white active:text-white px-4">
                 <img class="mr-2" src="../static/assets/img/icons/icon-configuracoes.svg" alt="logo">
               Configurações
             </a>
