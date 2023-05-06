@@ -27,7 +27,7 @@ def auth_login():
     if user:
         if password == user.sen_usuario or user.verify_password(password):
             login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or url_for('main.incomes'))
     flash('Nome de usuário ou senha inválido')
     return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
     #TODO: pesquisar sobre os parâmetros do url_for
@@ -44,7 +44,7 @@ def auth_recovery():
         email = emailinfo.normalized#
     except EmailNotValidError as e:
         flash(str(e))
-        return redirect(url_for('auth.account_recovery', **req))
+        return redirect(url_for('auth.recovery_password', **req))
     
     user = Usuario.query.filter_by(eml_usuario=email).first()
 
@@ -75,7 +75,7 @@ def auth_recovery():
             smtp.sendmail(email_sender, email_receiver, em.as_string())
 
     flash('Se esse email estiver registrado, você receberá um email. Verifique sua caixa de spam.')
-    return redirect(url_for('auth.account_recovery'))
+    return redirect(url_for('auth.recovery_password'))
 
 def auth_signup():
     ''' Valida as informações enviadas e registra o usuário. '''
@@ -107,16 +107,17 @@ def auth_signup():
         flash('As senhas precisam ser iguais')
         return redirect(url_for('auth.signup', **req))
     
-    verify_email = Usuario.query.filter_by(eml_usuario=email)
+    verify_email = Usuario.query.filter_by(eml_usuario=email).first()
     
     if verify_email:
         flash('Email já está cadastrado')
         return redirect(url_for('auth.signup', **req))
     
-    verify_username = Usuario.query.filter_by(nom_usuario=username)
+    verify_username = Usuario.query.filter_by(nom_usuario=username).first()
 
     if verify_username:
         flash('Usuário já está cadastrado')
+        return redirect(url_for('auth.signup', **req))
 
 
     password = bcrypt.generate_password_hash(password).decode('utf-8')#gera hash da senha
