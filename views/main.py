@@ -10,7 +10,7 @@ def index():
 @main.route('/home', methods=['GET', 'POST', 'PUT'])
 @login_required
 def home():
-    ...
+    return 'Recurso ainda não implementado :('
 
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
@@ -21,24 +21,24 @@ def incomes():
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def expenses():
-    ...
+    return 'Recurso ainda não implementado :('
 
 @main.route('/budgets', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def budgets():
-    ...
+    return 'Recurso ainda não implementado :('
 
 @main.route('/analyzes', methods=['GET'])
 @login_required
 def analyzes():
-    ...
+    return 'Recurso ainda não implementado :('
 
 @main.route('/profile', methods=['GET', 'PUT'])
 @login_required
 def profile():
-    ...
+    return 'Recurso ainda não implementado :('
 
 @main.route('/settings')
 @login_required
 def settings():
-    ...
+    return 'Recurso ainda não implementado :('
