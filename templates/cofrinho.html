@@ -27,7 +27,7 @@
           </div>
         </div>
     </header>
-
+    
     <div class="sidebar bg-white w-64 h-screen fixed left-0 z-10">
         <ul class="mt-6">
           <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
@@ -36,9 +36,9 @@
                Início
             </a>
           </li>
-          <li class="p-3 rounded-lg font-semibold bg-red-500">
-            <a href="{{url_for('main.incomes')}}" class="flex items-center text-white px-4">
-            <img class="mr-2" src="../static/assets/img/icons/icon-entradas-selected.svg" alt="logo">
+          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+            <a href="{{url_for('main.incomes')}}" class="flex items-center text-gray-400 px-4">
+            <img class="mr-2" src="../static/assets/img/icons/icon-entradas.svg" alt="logo">
               Entradas
             </a>
           </li>
@@ -48,9 +48,9 @@
               Saídas
             </a>
           </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.budgets')}}" class="flex items-center text-gray-400 px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-cofrinho.svg" alt="logo">
+          <li class="p-3 rounded-lg font-semibold bg-red-500">
+            <a href="{{url_for('main.budgets')}}" class="flex items-center text-white px-4">
+                <img class="mr-2" src="../static/assets/img/icons/icon-cofrinho-selected.svg" alt="logo">
               Cofrinho
             </a>
           </li>
@@ -73,42 +73,19 @@
             </a>
           </li>
         </ul>
-    </div>   
+    </div> 
       
     <main class="ml-64">
-      <div class="flex flex-row justify-between p-6" >
-          <h1 class="text-xl font-semibold mb-4">Entradas</h1>
-          <div class="flex ">
-              <form class="flex mr-4">
-                  <input type="text" class="w-full border-gray-300 rounded-lg py-2 px-4" placeholder="Pesquisar...">
-              </form>
+    <div class="flex flex-row justify-between p-6" >
+        <h1 class="text-xl font-semibold mb-4">Cofrinho</h1>
+        <div class="flex ">
+            <form class="flex mr-4">
+                <input type="text" class="w-full border-gray-300 rounded-lg py-2 px-4" placeholder="Pesquisar...">
+            </form>
                 <button class="bg-red-500 hover:bg-red-600 text-white px-4 rounded-lg">Adicionar Nova</button>
-          </div>
-      </div>
-      <div class="table w-full p-10">
-        <div class="">
-          <div class="flex flex-col md:flex-row incomes-center justify-center md:justify-between mb-2">
-            <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5">Editar</div>
-            <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5">Descrição</div>
-            <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5">Data</div>
-            <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5">Categoria</div>
-            <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 md:w-1/5">Valor</div>
-          </div>
-          
-          {% for transacao in user.transacoes_entrada_u %}
-          <div class="flex flex-col md:flex-row incomes-center justify-center md:justify-between mb-1 text-gray-500">
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
-              <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto">
-            </div>
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.dsc_entrada }}</div>
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.dat_entrada }}</div>
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.get_categoria_nome() }}</div>
-            <div class="rounded-lg bg-white p-3 md:w-1/5">{{ transacao.val_entrada }}</div>
-          </div>
-          {% endfor %}
-            
         </div>
-      </div>
+    </div>
+    
     </main>
 </body>
 </html>
