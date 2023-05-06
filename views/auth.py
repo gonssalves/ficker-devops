@@ -13,7 +13,7 @@ def login():
         from models.auth import auth_login
         return auth_login()
     form.process(request.args)
-    return render_template('', form=form)
+    return render_template('login.html', form=form)
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -23,7 +23,7 @@ def signup():
         from models.auth import auth_signup
         return auth_signup()
     form.process(request.args)
-    return render_template('', form=form)
+    return render_template('cadastro.html', form=form)
 
 @auth.route('/recovery-password', methods=['GET', 'POST'])
 def recovery_password():
@@ -33,7 +33,7 @@ def recovery_password():
         from models.auth import auth_recovery
         return auth_recovery()
     form.process(request.args)
-    return render_template('', form=form)
+    return render_template('esqueceuasenha.html', form=form)
 
 @auth.route('/logout', methods=['GET'])
 @login_required

@@ -1,7 +1,8 @@
 from app import db, bcrypt
+from flask_login import UserMixin
 
 #criação das tabelas
-class Usuario(db.Model):
+class Usuario(db.Model, UserMixin):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
     nom_real = db.Column(db.String(64), nullable=False)
@@ -18,10 +19,10 @@ class Usuario(db.Model):
     transacoes_cofrinho_u = db.relationship('TransacaoCofrinho', backref='usuario', lazy=True)
 
     def __repr__(self):
-        return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real}>'
+        return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real} | Email: {self.eml_usuario} | Senha: {self.sen_usuario}>'
     
     def verify_password(self, password):
-        return bcrypt.check_password_hash(self.password,password)
+        return bcrypt.check_password_hash(self.sen_usuario,password)
     
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'

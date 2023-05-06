@@ -1,12 +1,11 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from flask_login import login_required
-
 
 main = Blueprint('main', __name__)
 
 @main.route('/', methods=['GET'])
 def index():
-    ...
+    return render_template('index.html')
 
 @main.route('/home', methods=['GET', 'POST', 'PUT'])
 @login_required
@@ -16,7 +15,7 @@ def home():
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():
-    ...
+    return render_template('entradas.html')
 
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
