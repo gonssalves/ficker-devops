@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-manrope">
+    <header class="bg-white h-16 flex items-center justify-between px-4">
+        <a class="flex items-center" href="index.html">
+          <img class="mr-2" src="../static/assets/img/logo.svg" alt="logo">
+            <h1 class="text-2xl font-bold text-gray-800">Ficker</h1>
+        </a>   
+    </header>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+  {% endfor %}
+    <main>
+      <div class="max-w-md mx-auto mt-16 text-center border bg-white rounded-lg py-8 px-12  shadow-md shadow-gray-300">
+          <h2 class="text-2xl font-semibold mb-6">Entrar</h2>
+          <form method="POST" action="{{ url_for('auth.login') }}">
+            {{ form.csrf_token }}
+            <div class="mb-4">
+              <label class="block text-gray-700 mb-1 text-left" for="email">
+                Email
+              </label>
+              {{ form.email(class_="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="email") }}
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700 mb-1 text-left" for="senha">
+                Senha
+              </label>
+              {{ form.password(class_="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="senha") }}
+            </div>
+            <div class="mb-4 px-10">
+              {{ form.submit(class_="bg-red-500 w-full hover:bg-red-600 text-white font-regular py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+            </div>
+            <div>
+              <a class="text-sm" href="{{url_for('auth.recovery_password')}}">
+                  Esqueceu a senha?
+                </a>
+                <a class="block text-sm" href="{{url_for('auth.signup')}}">
+                    Cadastrar-se
+                </a>
+            </div>
+          </form>
+        </div>
+        
+  </main>
+    </body>
+</html>
