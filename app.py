@@ -47,4 +47,4 @@ app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
