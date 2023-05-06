@@ -94,15 +94,15 @@
               <div class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 md:w-1/5">Valor</div>
             </div>
             
-            {% for income in all_incomes %}
+            {% for transacao in user.transacoes_entrada_u %}
             <div class="flex flex-col md:flex-row incomes-center justify-center md:justify-between mb-1 text-gray-500">
               <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
                 <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto">
               </div>
-              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ income.dsc_entrada }}</div>
-              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ income.dat_entrada }}</div>
-              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5"></div>
-              <div class="rounded-lg bg-white p-3 md:w-1/5">{{ income.val_entrada }}</div>
+              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.dsc_entrada }}</div>
+              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.dat_entrada }}</div>
+              <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">{{ transacao.get_categoria_nome() }}</div>
+              <div class="rounded-lg bg-white p-3 md:w-1/5">{{ transacao.val_entrada }}</div>
             </div>
             {% endfor %}
               

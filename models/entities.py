@@ -1,5 +1,5 @@
 from app import db, bcrypt
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 
 #criação das tabelas
 class Usuario(db.Model, UserMixin):
@@ -24,6 +24,9 @@ class Usuario(db.Model, UserMixin):
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.sen_usuario,password)
     
+    def show_all():
+        return Usuario.query.all()
+    
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'
     id = db.Column(db.Integer, primary_key=True)
@@ -41,12 +44,21 @@ class TransacaoEntrada(db.Model):
     dat_entrada = db.Column(db.Date(), nullable=False)
     val_entrada = db.Column(db.Float(64))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
+    
+    categoria_nome = db.relationship('Categoria', backref='transacoes_entrada', lazy=True)
 
     def __repr__(self):
         return f'<Transação Entrada: {self.dsc_entrada} | Data: {self.dat_entrada} | Valor: {self.val_entrada}>'
     
     def show_all():
         return TransacaoEntrada.query.all()
+    
+    def get_categoria_nome(self):
+        if self.categoria_nome is not None:
+            return self.categoria_nome.dsc_categoria
+        else:
+            return 'Sem categoria'
 
 class TransacaoSaida(db.Model):
     __tablename__ = 'transacoes_saida'
@@ -55,7 +67,6 @@ class TransacaoSaida(db.Model):
     dat_saida = db.Column(db.Date(), nullable=False)
     val_saida = db.Column(db.Float(64))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
 
     def __repr__(self):
         return f'<Transação Saída: {self.dsc_saida} | Data: {self.dat_saida} | Valor: {self.val_saida}>'
@@ -66,7 +77,7 @@ class Categoria(db.Model):
     dsc_categoria = db.Column(db.String(64), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
 
-    transacoes_saida_c = db.relationship('TransacaoSaida', backref='categoria', lazy=True)
+    transacoes_entrada_c = db.relationship('TransacaoEntrada', backref='categoria', lazy=True)
 
     def __repr__(self):
         return f'<Categoria: {self.dsc_categoria}>'

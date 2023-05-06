@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
@@ -15,9 +15,8 @@ def home():
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():
-    from models.entities import TransacaoEntrada
-    all_incomes = TransacaoEntrada.show_all()
-    return render_template('entradas.html', all_incomes=all_incomes)
+    user = current_user
+    return render_template('entradas.html', user=user)
 
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
