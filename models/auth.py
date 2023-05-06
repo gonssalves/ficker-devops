@@ -25,10 +25,16 @@ def auth_login():
     req.pop('submit')
 
     if user:
+<<<<<<< HEAD
         if password == user.sen_usuario or user.verify_password(password):
             print('aaaa')
             login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
             return redirect(request.args.get('next') or url_for('main.index'))
+=======
+        if password == user.password or user.verify_password(password):
+            login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
+            return redirect(request.args.get('next') or url_for('main.home'))
+>>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
     flash('Nome de usuário ou senha inválido')
     return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
     #TODO: pesquisar sobre os parâmetros do url_for
@@ -47,6 +53,7 @@ def auth_recovery():
         flash(str(e))
         return redirect(url_for('auth.account_recovery', **req))
     
+<<<<<<< HEAD
     user = Usuario.query.filter_by(eml_usuario=email).first()
 
     if user:
@@ -55,6 +62,15 @@ def auth_recovery():
         from secret import EMAIL_SENDER, EMAIL_PASSWORD
         email_sender = EMAIL_SENDER
         email_password = EMAIL_PASSWORD
+=======
+    user = Usuario.query.filter_by(email=email).first()
+
+    if user:
+        password = user.password
+        #Define email sender and receiver
+        email_sender = ''
+        email_password = ''
+>>>>>>> af379c359bb9a9952343382a5ec8f6e52c073ec3
         email_receiver = email
 
         #Set the subject and body of the email
