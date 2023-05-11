@@ -1,91 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ficker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="bg-gray-100 font-manrope">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 font-manrope">
     <header class="bg-white h-16 flex items-center justify-between px-4">
-        <a class="flex items-center" href="{{url_for('main.index')}}">
-          <img class="mr-2" src="../static/assets/img/logo.svg" alt="logo">
-            <h1 class="text-2xl font-bold text-gray-800">Ficker</h1>
-        </a>
+      <a class="flex items-center" href="{{url_for('main.index')}}">
+        <img class="mr-2" src="../static/assets/img/logo.svg" alt="logo" />
+        <h1 class="text-2xl font-bold text-gray-800">Ficker</h1>
+      </a>
+      <div class="flex items-center">
+        <div class="items-center justify-center mr-2">
+          <img src="../static/assets/img/icons/icon-notificacao.svg" alt="" />
+        </div>
         <div class="flex items-center">
-          <div class="items-center justify-center mr-2">
-            <img src="../static/assets/img/icons/icon-notificacao.svg" alt="">
-          </div>
-          <div class="flex items-center">
-            <img src="../static/assets/img/user.png" alt="" class="w-6 h-6 rounded-full mr-1">
-            <p class="text-sm text-gray-800">{{user.nom_real}}</p>
-          </div>
+          <p class="text-sm text-gray-800 font-semibold">{{user.nom_real}}</p>
         </div>
+      </div>
     </header>
-    
+
     <div class="sidebar bg-white w-64 h-screen fixed left-0 z-10">
-        <ul class="mt-6">
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.home')}}" class="flex items-center text-gray-400  px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-inicio.svg" alt="logo">              
-               Início
-            </a>
-          </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.incomes')}}" class="flex items-center text-gray-400 px-4">
-            <img class="mr-2" src="../static/assets/img/icons/icon-entradas.svg" alt="logo">
-              Entradas
-            </a>
-          </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.expenses')}}" class="flex items-center text-gray-400 px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-saidas.svg" alt="logo">
-              Saídas
-            </a>
-          </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.budgets')}}" class="flex items-center text-gray-400 px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-cofrinho.svg" alt="logo">
-              Cofrinho
-            </a>
-          </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.analyzes')}}" class="flex items-center text-gray-400 px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-analises.svg" alt="logo">
-              Análises
-            </a>
-          </li>
-          <li class="p-3 rounded-lg font-semibold bg-red-500">
-            <a href="{{url_for('main.profile')}}" class="flex items-center text-white  px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-perfil-selected.svg" alt="logo">
-              Meu Perfil
-            </a>
-          </li>
-          <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
-            <a href="{{url_for('main.settings')}}" class="flex items-center text-gray-400  px-4">
-                <img class="mr-2" src="../static/assets/img/icons/icon-configuracoes.svg" alt="logo">
-              Configurações
-            </a>
-          </li>
-        </ul>
-    </div> 
-      
-    <main class="ml-64">
-    <div class="flex flex-row justify-between p-6" >
-        <h1 class="text-xl font-semibold mb-4">Meu Perfil</h1>
-        <div class="flex ">
-            <form class="flex mr-4">
-                <input type="text" class="w-full border-gray-300 rounded-lg py-2 px-4" placeholder="Pesquisar...">
-            </form>
-                <button class="bg-red-500 hover:bg-red-600 text-white px-4 rounded-lg">Adicionar Nova</button>
-        </div>
+      <ul class="mt-6">
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.home')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-inicio.svg"
+              alt="logo"
+            />
+            Início
+          </a>
+        </li>
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.incomes')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-entradas.svg"
+              alt="logo"
+            />
+            Entradas
+          </a>
+        </li>
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.expenses')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-saidas.svg"
+              alt="logo"
+            />
+            Saídas
+          </a>
+        </li>
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.budgets')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-cofrinho.svg"
+              alt="logo"
+            />
+            Cofrinho
+          </a>
+        </li>
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.analyzes')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-analises.svg"
+              alt="logo"
+            />
+            Análises
+          </a>
+        </li>
+        <li class="p-3 rounded-lg font-semibold bg-red-500">
+          <a
+            href="{{url_for('main.profile')}}"
+            class="flex items-center text-white px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-perfil-selected.svg"
+              alt="logo"
+            />
+            Meu Perfil
+          </a>
+        </li>
+        <li class="p-3 rounded-lg hover:bg-gray-50 hover:font-semibold">
+          <a
+            href="{{url_for('main.settings')}}"
+            class="flex items-center text-gray-400 px-4"
+          >
+            <img
+              class="mr-2"
+              src="../static/assets/img/icons/icon-sair.svg"
+              alt="icon-sair"
+            />
+            Sair
+          </a>
+        </li>
+      </ul>
     </div>
-    
+
+    <main class="ml-64">
+      <div class="flex flex-row justify-between p-6">
+        <h1 class="text-xl font-semibold mb-4">Meu Perfil</h1>
+        <div class="flex">
+          <form class="flex mr-4">
+            <input
+              type="text"
+              class="w-full border-gray-300 rounded-lg py-2 px-4"
+              placeholder="Pesquisar..."
+            />
+          </form>
+          <button
+            class="bg-red-500 hover:bg-red-600 text-white px-4 rounded-lg"
+          >
+            Adicionar Nova
+          </button>
+        </div>
+      </div>
     </main>
-</body>
+  </body>
 </html>
