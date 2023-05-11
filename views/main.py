@@ -11,7 +11,6 @@ def index():
 @login_required
 def home():
     return render_template('inicio.html', user=current_user)
-
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():

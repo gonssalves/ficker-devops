@@ -26,7 +26,7 @@ def auth_login():
     if user:
         if password == user.sen_usuario or user.verify_password(password):
             login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
-            return redirect(request.args.get('next') or url_for('main.incomes'))
+            return redirect(request.args.get('next') or url_for('main.home'))
     flash('Nome de usuário ou senha inválido')
     return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
     #TODO: pesquisar sobre os parâmetros do url_for
