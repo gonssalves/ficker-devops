@@ -245,8 +245,8 @@
                 Categoria
               </label>
               <select
-                class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-                id="categoria" name="selected_option"
+                class="categoria rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+               name="selected_option"
               >
                 <option disabled selected>Selecione</option>
                 <option value="nova">Nova</option>
@@ -256,7 +256,7 @@
               </select>
             </div>
 
-            <div id="nova_categoria">
+            <div class="nova_categoria">
               <label
                 class="block text-gray-700 mb-1 text-left"
                 for="descricao_categoria"
@@ -274,7 +274,6 @@
               Valor
             </label>
             {{ form.value (
-              type="number",
               step="0.01",
               placeholder="R$",
               class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
@@ -317,11 +316,9 @@
           >
             Data
           </label>
-          <input
-            type="date"
-            class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-            id="data_transacao"
-          />
+          {{ form.date (
+            class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+            id="data_transacao" )}}
         </div>
          <div class="mb-4 flex justify-between">
             <div class="w-1/2 mr-2">
@@ -357,13 +354,12 @@
           <label class="block text-gray-700 mb-1 text-left" for="valor">
             Valor
           </label>
-          <input
-            type="number"
-            step="0.01"
-            placeholder="R$"
-            class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-            id="valor"
-          />
+          {{form.value (
+            type="number",
+            step="0.01",
+            placeholder="R$",
+            class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+            id="valor" )}}
         </div>
         <div class="mb-4 flex justify-between">
           <div class="flex justify-left">
@@ -389,30 +385,39 @@
     
     <script>
       $(document).ready(function() {
-      // Evento de clique nos botões "open_edit"
-      $('.open-edit-button').click(function() {
-        // Obter o ID da transação associada ao botão clicado
-        var incomeId = $(this).data('income-id');
+      // Manipulador de eventos de clique para o botão de edição
+      $(".open_edit").click(function() {
+        // Obtém o ID da entrada a partir do atributo de dados
+        var incomeId = $(this).data("income-id");
+
+        // Encontre a entrada correspondente nos dados do usuário
+        "{% for transacao in user.transacoes_entrada_u %}"
+          "{% if transacao.id == 10 %}"
+          $(".form_edit input[name='description']").val("{{ transacao.dsc_entrada }}");
+          $(".form_edit input[name='date']").val("{{ transacao.dat_entrada }}");
+          $(".form_edit select[name='selected_option']").val("{{ transacao.get_categoria_nome() }}");
+          $(".form_edit input[name='value']").val("{{ transacao.val_entrada }}");
+          "{% endif %}"
+        "{% endfor %}"
+
+       
+
+        //console.log("Entry:", entry)
+
+        //Preencha os campos do formulário de edição com os valores da entrada
         
-        // Obter os valores correspondentes da transação usando o ID
-        var descricao = $('#descricao_' + incomeId).text();
-        var data = $('#data_' + incomeId).text();
-        var categoria = $('#categoria_' + incomeId).text();
-        var valor = $('#valor_' + incomeId).text();
         
-        // Preencher os campos do formulário de edição com os valores obtidos
-        $('.form_edit #descricao').val(descricao);
-        $('.form_edit #data_transacao').val(data);
-        $('.form_edit #categoria').val(categoria);
-        $('.form_edit #valor').val(valor);
+        // Exiba o formulário de edição
+        $(".form_edit").fadeIn();
       });
-     });
+      });
+
       $(document).ready(function () {
         $(".form_add").hide();
         $(".form_edit").hide();
 
         //Formulario de adicionar
-        $("#open_add").click(function () {
+        $(".open_add").click(function () {
           $(".form_add").fadeIn();
         });
 
@@ -421,9 +426,9 @@
         });
 
         //Formulario de editar
-        $(".open_edit").click(function () {
-          $(".form_edit").fadeIn();
-        });
+        // $(".open_edit").click(function () {
+        //   $(".form_edit").fadeIn();
+        // });
 
         $(".close_edit").click(function () {
           $(".form_edit").fadeOut();
@@ -449,8 +454,7 @@
         var button = $(this);
         var incomeId = button.data('income-id');
         $('#deleteButton').data('income-id', incomeId);
-        
-        console.log("Income ID:", incomeId);
+      
       });
 
       $('#deleteButton').click(function() {
@@ -458,12 +462,6 @@
         window.location.href = 'incomes/' + incomeId + '/delete';
       });
     });
-
-
-
-
-
-
     </script>
   </body>
 </html>
