@@ -23,6 +23,16 @@ def incomes():
     form.process(request.args)
     return render_template('entradas.html', user=current_user, form=form)
 
+@main.route('/incomes/<int:income_id>/delete', methods=['GET'])
+@login_required
+def delete_incomes(income_id):
+        from models.entities import TransacaoEntrada
+
+        income = TransacaoEntrada.show_one(income_id)
+
+        from models.general import delete_income
+        return delete_income(income)
+
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def expenses():
