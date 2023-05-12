@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateField, FloatField, SelectField
 from wtforms.validators import InputRequired, Length, Regexp
 
 class LoginForm(FlaskForm):
@@ -29,3 +29,12 @@ class SignupForm(FlaskForm):
 class RecoveryForm(FlaskForm):
     email = StringField(validators=[InputRequired(message='Campo em branco')])
     submit = SubmitField('Enviar')
+
+class IncomeForm(FlaskForm):
+    description = StringField('Descrição', validators=[InputRequired(message='Campo em branco')])
+    date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
+    new_category = StringField('Cateogia')
+    value = FloatField('Valor', validators=[InputRequired(message='Campo em branco')])
+    submit = SubmitField('Adicionar')
+
+
