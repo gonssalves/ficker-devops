@@ -54,6 +54,9 @@ class TransacaoEntrada(db.Model):
     def show_all():
         return TransacaoEntrada.query.all()
     
+    def show_one(income_id):
+        return TransacaoEntrada.query.get(int(income_id))
+
     def get_categoria_nome(self):
         if self.categoria_nome is not None:
             return str(self.categoria_nome.dsc_categoria)
