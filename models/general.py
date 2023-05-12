@@ -39,3 +39,15 @@ def add_income():
         
     flash('Entrada cadastrada com sucesso')
     return redirect(url_for('main.incomes'))
+
+def delete_income(old_income):
+    try:
+        db.session.delete(old_income)
+        db.session.commit()
+    except:
+        flash('Não foi possível excluir a entrada, por favor tente mais tarde')
+        return redirect(url_for('main.incomes'))
+    
+    flash('Entrada excluída')
+    return redirect(url_for('main.incomes'))
+    
