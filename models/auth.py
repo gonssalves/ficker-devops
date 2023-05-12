@@ -23,12 +23,17 @@ def auth_login():
     req.pop('csrf_token')
     req.pop('submit')
 
-    if user:
-        if password == user.sen_usuario or user.verify_password(password):
-            login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
-            return redirect(request.args.get('next') or url_for('main.home'))
-    flash('Nome de usuário ou senha inválido')
-    return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
+    if not user:
+        flash('Nome de usuário')
+        return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
+    
+    if not user.verify_password(password) or password == user.sen_usuario:
+        flash('Senha inválida')
+        return redirect(url_for('auth.login', **req))
+        
+    login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
+    return redirect(request.args.get('next') or url_for('main.home'))
+    
     #TODO: pesquisar sobre os parâmetros do url_for
 
 def auth_recovery():
