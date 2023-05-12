@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
@@ -11,10 +11,17 @@ def index():
 @login_required
 def home():
     return render_template('inicio.html', user=current_user)
+
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():
-    return render_template('entradas.html', user=current_user)
+    from forms import IncomeForm
+    form = IncomeForm()
+    if form.validate_on_submit():
+        from models.general import add_income
+        return add_income()
+    form.process(request.args)
+    return render_template('entradas.html', user=current_user, form=form)
 
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
