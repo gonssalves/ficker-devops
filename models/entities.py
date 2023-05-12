@@ -1,5 +1,5 @@
 from app import db, bcrypt
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 
 #criação das tabelas
 class Usuario(db.Model, UserMixin):
@@ -18,11 +18,11 @@ class Usuario(db.Model, UserMixin):
     objetivos_u = db.relationship('Objetivo', backref='usuario', lazy=True)
     transacoes_cofrinho_u = db.relationship('TransacaoCofrinho', backref='usuario', lazy=True)
 
-    # def __repr__(self):
-    #     return f'<Usuário: {self.nom_usuario} | Nome: {self.nom_real} | Email: {self.eml_usuario} | Senha: {self.sen_usuario}>'
+    def __repr__(self):
+        return f'<Usuário: {self.nom_usuario}>'
     
     def verify_password(self, password):
-        return bcrypt.check_password_hash(self.sen_usuario,password)
+        return bcrypt.check_password_hash(self.sen_usuario, password)
     
     def show_all():
         return Usuario.query.all()
@@ -56,7 +56,7 @@ class TransacaoEntrada(db.Model):
     
     def get_categoria_nome(self):
         if self.categoria_nome is not None:
-            return self.categoria_nome.dsc_categoria
+            return str(self.categoria_nome.dsc_categoria)
         else:
             return 'Sem categoria'
 
@@ -79,8 +79,8 @@ class Categoria(db.Model):
 
     transacoes_entrada_c = db.relationship('TransacaoEntrada', backref='categoria', lazy=True)
 
-    # def __repr__(self):
-    #     return f'<Categoria: {self.dsc_categoria}>'
+    def __repr__(self):
+        return f'<Categoria: {self.dsc_categoria}>'
     
 class Objetivo(db.Model):
     __tablename__ = 'objetivos'
