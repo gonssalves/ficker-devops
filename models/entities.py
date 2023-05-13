@@ -74,6 +74,9 @@ class TransacaoSaida(db.Model):
     # def __repr__(self):
     #     return f'<Transação Saída: {self.dsc_saida} | Data: {self.dat_saida} | Valor: {self.val_saida}>'
 
+    def show_one(expense_id):
+        return TransacaoSaida.query.get(int(expense_id))
+
 class Categoria(db.Model):
     __tablename__ = 'categorias'
     id = db.Column(db.Integer, primary_key=True)
