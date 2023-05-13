@@ -186,7 +186,7 @@
 
           {% for transacao in user.transacoes_entrada_u %}
           <div class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-1 text-gray-500">
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
+            <div class="rounded-lg bg-white p-1 mr-2 md:w-1/5">
               <a class="open_edit open-edit-button rounded rounded-full w-full" data-income-id ="{{ transacao.id }}">
                 <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto my-auto p-3 hover:bg-gray-100 rounded rounded-lg"/>
               </a>              
@@ -298,8 +298,6 @@
         <h2 class="text-lg font-semibold mb-6">Editar Entrada</h2>
         <div class="mb-4">
           <label class="block text-gray-700 mb-1 text-left" for="descricao">
-            <form method="POST" action="{{ url_for('main.incomes') }}"">
-
             {{ form.csrf_token }}
 
             Descrição
@@ -364,7 +362,7 @@
         <div class="mb-4 flex justify-between">
           <div class="flex justify-left">
             <button
-              class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+              class=" send_edit bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
             >
               Salvar
             </button>
@@ -377,7 +375,7 @@
             <button id="deleteButton">
               <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
             </button>   
-          </form>         
+          
           </div>
         </div>
       </div>
@@ -392,7 +390,7 @@
 
         // Encontre a entrada correspondente nos dados do usuário
         "{% for transacao in user.transacoes_entrada_u %}"
-          "{% if transacao.id == 10 %}"
+          "{% if transacao.id == 11 %}"
           $(".form_edit input[name='description']").val("{{ transacao.dsc_entrada }}");
           $(".form_edit input[name='date']").val("{{ transacao.dat_entrada }}");
           $(".form_edit select[name='selected_option']").val("{{ transacao.get_categoria_nome() }}");
@@ -400,13 +398,7 @@
           "{% endif %}"
         "{% endfor %}"
 
-       
-
-        //console.log("Entry:", entry)
-
-        //Preencha os campos do formulário de edição com os valores da entrada
-        
-        
+              
         // Exiba o formulário de edição
         $(".form_edit").fadeIn();
       });
@@ -424,11 +416,6 @@
         $(".close_add").click(function () {
           $(".form_add").fadeOut();
         });
-
-        //Formulario de editar
-        // $(".open_edit").click(function () {
-        //   $(".form_edit").fadeIn();
-        // });
 
         $(".close_edit").click(function () {
           $(".form_edit").fadeOut();
@@ -454,6 +441,8 @@
         var button = $(this);
         var incomeId = button.data('income-id');
         $('#deleteButton').data('income-id', incomeId);
+        $('.send_edit').data('income-id', incomeId);
+        
       
       });
 
@@ -461,6 +450,13 @@
         var incomeId = $(this).data('income-id');
         window.location.href = 'incomes/' + incomeId + '/delete';
       });
+
+      $('.send_edit').click(function() {
+        var incomeId = $(this).data('income-id');
+        $(".form_edit").fadeOut();
+        window.location.href = 'incomes/' + incomeId + '/edit';
+      });
+
     });
     </script>
   </body>
