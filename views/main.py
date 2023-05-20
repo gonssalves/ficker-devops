@@ -23,15 +23,12 @@ def incomes():
     form.process(request.args)
     return render_template('entradas.html', user=current_user, form=form)
 
-@main.route('/incomes/<int:income_id>/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@main.route('/incomes/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
-def edit_incomes(income_id):
+def edit_incomes():
     from models.general import edit_income
-    from models.entities import TransacaoEntrada
-
-    income = TransacaoEntrada.show_one(income_id)
-
-    return edit_income(income)
+    
+    return edit_income()
 
 @main.route('/incomes/<int:income_id>/delete', methods=['GET'])
 @login_required
@@ -54,15 +51,12 @@ def expenses():
     form.process(request.args)
     return render_template('saidas.html', user=current_user, form=form)
 
-@main.route('/expenses/<int:expense_id>/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@main.route('/expenses/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
-def edit_expenses(expense_id):
-    from models.general import edit_income
-    from models.entities import TransacaoSaida
+def edit_expenses():
+    from models.general import edit_expense
 
-    expense = TransacaoSaida.show_one(expense_id)
-
-    return edit_income(expense)
+    return edit_expense()
 
 @main.route('/expenses/<int:expense_id>/delete', methods=['GET'])
 @login_required
