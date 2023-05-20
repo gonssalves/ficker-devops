@@ -12,13 +12,13 @@ def add_income():
     selected_option = request.form.get('selected_option')
     category_description = (request.form.get('new_category') if request.form.get('new_category') else 'Sem Categoria')
     
-    date = datetime. strptime(date,  '%Y-%m-%d')
+    date = datetime. strptime(date, '%Y-%m-%d')
 
     user = Usuario.query.get(int(current_user.id))
    
     if selected_option == 'nova':
 
-        query_category = Categoria.filter_by(dsc_categoria=category_description, usuario=user).first()
+        query_category = Categoria.query.filter_by(dsc_categoria=category_description, usuario=user).first()
 
         if query_category:
             new_category = query_category    
@@ -58,36 +58,69 @@ def delete_income(old_income):
     flash('Entrada excluída')
     return redirect(url_for('main.incomes'))
 
-def edit_income(old_income):
-    return 'recurso não implementado ainda'
-
+def edit_income():
     income_description = request.form.get('description')
     date = request.form.get('date')
     value = request.form.get('value')
+    idd = request.form.get('idd')
     selected_option = request.form.get('selected_option')
-    category_description = (request.form.get('new_category') if request.form.get('new_category') else 'Sem Categoria')
+    
+    date = datetime.strptime(date, '%Y-%m-%d')
+    date1 = str(date)
+    date1 = date1[:10]
 
+    
     user = Usuario.query.get(int(current_user.id))
 
-    category = Categoria.query.filter_by(dsc_categoria=selected_option).first()
-
-    #edit_income = TransacaoEntrada.query.filter_by(dsc_entrada=income_description, dat_entrada=date, val_entrada=value, usuario=user, categoria=category).first()
+    edit_income = TransacaoEntrada.query.get(int(idd))
     
-    #return str(edit_income.id)
-    
-    old_income.dsc_entrada = income_description 
-    old_income.dat_entrada = date 
-    old_income.val_entrada = value 
-    old_income.usuario = user 
-    old_income.categoria = category
-
-    try:
-        db.session.add(old_income)
-    except:
-        flash('Não foi possível alterar a entrada, por favor tente mais tarde')
+    x = ''
+    x += ('true' if edit_income.dsc_entrada == income_description else 'false')
+    x += ('true' if edit_income.val_entrada == float(value) else 'false')    
+    x += ('true' if str(edit_income.dat_entrada) == date1 else 'false')
+    x += ('true' if edit_income.get_categoria_nome() == str(selected_option) else 'false')
+ 
+    if not 'false' in x:
+        flash('Nenhum campo foi alterado')
         return redirect(url_for('main.incomes'))
+        
+    if selected_option == 'nova':
+        category_description = request.form.get('new_category')
+        query_category = Categoria.query.filter_by(dsc_categoria=category_description, usuario=user).first()
+        
+        if query_category:
+            new_category = query_category
+            print('if')    
+        else:
+            new_category = Categoria(dsc_categoria='Sem Categoria', usuario=user)
+            print('else')    
+
+        edit_income.dsc_entrada = income_description 
+        edit_income.dat_entrada = date 
+        edit_income.val_entrada = value 
+        edit_income.categoria = new_category
+        
+        try:
+            db.session.add(edit_income)
+            db.session.commit()
+        except:
+            flash('Não foi possível alterar a entrada, por favor tente mais tarde')
+            return redirect(url_for('main.incomes'))
+    else:
+        category = Categoria.query.filter_by(dsc_categoria=selected_option).first()
+
+        edit_income.dsc_entrada = income_description 
+        edit_income.dat_entrada = date 
+        edit_income.val_entrada = value 
+        edit_income.categoria = category
+        
+        try:
+            db.session.add(edit_income)
+            db.session.commit()
+        except:
+            flash('Não foi possível alterar a entrada, por favor tente mais tarde')
+            return redirect(url_for('main.incomes'))
     
-    db.session.commit()
     flash('Entrada alterada')
     return redirect(url_for('main.incomes'))
 
@@ -124,36 +157,38 @@ def delete_expense(old_expense):
     flash('Saída excluída')
     return redirect(url_for('main.expenses'))
 
-def edit_expense(old_expense):
-    return 'recurso não implementado ainda'
-
-    income_description = request.form.get('description')
+def edit_expense():
+    expense_description = request.form.get('description')
     date = request.form.get('date')
     value = request.form.get('value')
-    selected_option = request.form.get('selected_option')
-    category_description = (request.form.get('new_category') if request.form.get('new_category') else 'Sem Categoria')
-
-    user = Usuario.query.get(int(current_user.id))
-
-    category = Categoria.query.filter_by(dsc_categoria=selected_option).first()
-
-    #edit_income = TransacaoEntrada.query.filter_by(dsc_entrada=income_description, dat_entrada=date, val_entrada=value, usuario=user, categoria=category).first()
+    idd = request.form.get('idd')
     
-    #return str(edit_income.id)
+    date = datetime.strptime(date, '%Y-%m-%d')
+    date1 = str(date)
+    date1 = date1[:10]
     
-    old_income.dsc_entrada = income_description 
-    old_income.dat_entrada = date 
-    old_income.val_entrada = value 
-    old_income.usuario = user 
-    old_income.categoria = category
+    edit_expense = TransacaoSaida.query.get(int(idd))
+    
+    x = ''
+    x += ('true' if edit_expense.dsc_saida == expense_description else 'false')
+    x += ('true' if edit_expense.val_saida == float(value) else 'false')    
+    x += ('true' if str(edit_expense.dat_saida) == date1 else 'false')
+    print(x)
+
+    if not 'false' in x:
+        flash('Nenhum campo foi alterado')
+        return redirect(url_for('main.expenses'))
+    
+    edit_expense.dsc_saida = expense_description 
+    edit_expense.dat_saida = date 
+    edit_expense.val_saida = value 
 
     try:
-        db.session.add(old_income)
+        db.session.add(edit_expense)
+        db.session.commit()
     except:
-        flash('Não foi possível alterar a entrada, por favor tente mais tarde')
-        return redirect(url_for('main.incomes'))
-    
-    db.session.commit()
-    flash('Entrada alterada')
-    return redirect(url_for('main.incomes'))
-    
+        flash('Não foi possível alterar a saida, por favor tente mais tarde')
+        return redirect(url_for('main.expenses'))
+        
+    flash('Saída alterada')
+    return redirect(url_for('main.expenses'))
