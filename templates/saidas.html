@@ -211,7 +211,7 @@
       <h2 class="text-lg font-semibold mb-6">Nova Entrada</h2>
       <form method="POST" action="{{ url_for('main.expenses') }}">
         {{ form.csrf_token }}
-
+        
         <div class="mb-4">
           <label class="block text-gray-700 mb-1 text-left" for="descricao">
             Descrição
@@ -263,7 +263,10 @@
       <h2 class="text-lg font-semibold mb-6">Editar Saída</h2>
       <div class="mb-4">
         <label class="block text-gray-700 mb-1 text-left" for="descricao">
+        <form method="POST" action="{{ url_for('main.edit_expenses') }}">
           {{ form.csrf_token }}
+          {{ form.idd(type="text", class = "hidden") }}
+
 
           Descrição
         </label>
@@ -296,11 +299,7 @@
       </div>
       <div class="mb-4 flex justify-between">
         <div class="flex justify-left">
-          <button
-            class=" send_edit bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-          >
-            Salvar
-          </button>
+          {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
           <input
           type="reset" value="Cancelar"
           class="close_edit bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
@@ -310,7 +309,7 @@
           <button id="deleteButton">
             <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
           </button>   
-        
+        </form>
         </div>
       </div>
     </div>
@@ -325,11 +324,13 @@
 
       // Encontre a entrada correspondente nos dados do usuário
       "{% for transacao in user.transacoes_saida_u %}"
-        "{% if transacao.id == 11 %}"
-        $(".form_edit input[name='description']").val("{{ transacao.dsc_saida }}");
-        $(".form_edit input[name='date']").val("{{ transacao.dat_saida }}");
-        $(".form_edit input[name='value']").val("{{ transacao.val_saida }}");
-        "{% endif %}"
+        expense_id = "{{ transacao.id }}"
+        if(expenseId == expense_id){
+          $(".form_edit input[name='idd']").val("{{ transacao.id }}");
+          $(".form_edit input[name='description']").val("{{ transacao.dsc_saida }}");
+          $(".form_edit input[name='date']").val("{{ transacao.dat_saida }}");
+          $(".form_edit input[name='value']").val("{{ transacao.val_saida }}");
+        }
       "{% endfor %}"
 
             
@@ -362,8 +363,6 @@
       var button = $(this);
       var expenseId = button.data('expense-id');
       $('#deleteButton').data('expense-id', expenseId);
-      $('.send_edit').data('expense-id', expenseId);
-      
     
     });
 
@@ -371,13 +370,6 @@
       var expenseId = $(this).data('expense-id');
       window.location.href = 'expenses/' + expenseId + '/delete';
     });
-
-    $('.send_edit').click(function() {
-      var expenseId = $(this).data('expense-id');
-      $(".form_edit").fadeOut();
-      window.location.href = 'expenses/' + expenseId + '/edit';
-    });
-
   });
   </script>
 </body>
