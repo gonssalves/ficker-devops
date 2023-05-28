@@ -1,6 +1,6 @@
 from models.entities import Usuario
 from flask import request, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, current_user
 from app import db, bcrypt
 from email_validator import validate_email, EmailNotValidError
 import re
@@ -103,12 +103,12 @@ def auth_signup():
         flash(str(e))
         return redirect(url_for('auth.signup', **req))
     
-    if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password):
-        flash('A senha precisa conter ao menos uma letra, um número e um caractere especial')
-        return redirect(url_for('auth.signup', **req))
-    
     if password != password2:
         flash('As senhas precisam ser iguais')
+        return redirect(url_for('auth.signup', **req))
+    
+    if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password):
+        flash('A senha precisa conter ao menos uma letra, um número e um caractere especial')
         return redirect(url_for('auth.signup', **req))
     
     verify_email = Usuario.query.filter_by(eml_usuario=email).first()
@@ -138,3 +138,37 @@ def auth_signup():
     
     flash('Você se cadastrou, já pode entrar em sua conta')
     return redirect(url_for('auth.login'))
+
+def edit_account():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    password2 = request.form.get('password2')
+
+    verify_email = Usuario.query.filter(Usuario.id != current_user.id, Usuario.eml_usuario == email).first()
+
+    if verify_email:
+        flash('Email já cadastrado')
+        return redirect(url_for('main.profile'))
+    
+    user = Usuario.query.get(int(current_user.id))
+
+    if password:
+        if password != password2:
+            flash('As senhas precisam ser iguais')
+            return redirect(url_for('main.profile'))
+        
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$', password):
+            flash('A senha precisa conter ao menos uma letra, um número e um caractere especial')
+            return redirect(url_for('main.profile'))
+        
+        user.sen_usuario =  bcrypt.generate_password_hash(password).decode('utf-8')
+    
+    user.nom_real = name
+    user.eml_usuario = email
+   
+    db.session.add(user)
+    db.session.commit()
+
+    flash('Dados atualizados')
+    return redirect(url_for('main.profile'))    
