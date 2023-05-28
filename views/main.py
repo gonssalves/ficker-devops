@@ -20,7 +20,6 @@ def incomes():
     if form.validate_on_submit():
         from models.general import add_income
         return add_income()
-    form.process(request.args)
     return render_template('entradas.html', user=current_user, form=form)
 
 @main.route('/incomes/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -48,7 +47,6 @@ def expenses():
     if form.validate_on_submit():
         from models.general import add_expense
         return add_expense()
-    form.process(request.args)
     return render_template('saidas.html', user=current_user, form=form)
 
 @main.route('/expenses/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
@@ -78,10 +76,18 @@ def budgets():
 def analyzes():
     return render_template('analises.html', user=current_user)
 
-@main.route('/profile', methods=['GET', 'PUT'])
+@main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template('perfil.html', user=current_user)
+    from forms import EditAccountForm
+
+    form = EditAccountForm(obj=current_user)
+    
+    if form.validate_on_submit():
+        from models.auth import edit_account
+        return edit_account()
+    
+    return render_template('perfil.html', user=current_user, form=form)
 
 @main.route('/settings')
 @login_required
