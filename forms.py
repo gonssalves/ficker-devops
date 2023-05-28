@@ -8,6 +8,13 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Me mantenha conectado')
     submit = SubmitField('Entrar')
 
+class EditAccountForm(FlaskForm):
+    name = StringField(validators=[InputRequired(message='Campo em branco')])
+    email = StringField(validators=[InputRequired(message='Campo em branco')])
+    password = PasswordField()
+    password2 = PasswordField()
+    submit = SubmitField('Confirmar')
+
 class SignupForm(FlaskForm):
     real_name = StringField('Nome Real', validators=[InputRequired(message='Campo em branco')])
     username = StringField(
