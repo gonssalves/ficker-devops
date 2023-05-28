@@ -201,7 +201,8 @@
               {{ transacao.get_categoria_nome() }}
             </div>
             <div class="rounded-lg bg-white p-3 md:w-1/5">
-              {{ transacao.val_entrada }}
+              <p style="color:green;">R$ {{ transacao.val_entrada }}</p>
+              
             </div>
           </div>
           {% endfor %}
