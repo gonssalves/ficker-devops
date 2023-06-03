@@ -141,10 +141,7 @@
               placeholder="Pesquisar..."
             />
           </form>
-          <button
-            
-            class="open_add bg-red-500 hover:bg-red-600 text-white px-4 rounded-lg"
-          >
+          <button id="open_add" class=" bg-red-500 hover:bg-red-600 text-white px-4 rounded-lg">
             Adicionar Nova
           </button>
         </div>
@@ -172,6 +169,13 @@
             >
               Objetivo
             </div>
+
+            <div
+              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/3"
+            >
+              Ação
+            </div>
+
             <div
               class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/3"
             >
@@ -193,14 +197,20 @@
               </a>              
             </div>
             <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
-              'Objetivo'
+              <a href="">{{ transacao.objetivo.nom_objetivo }}</a>
+            </div>
+            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
+              {{ transacao.tip_transacao }}
             </div>
             <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
               {{ transacao.dat_transacao }}
             </div>
             <div class="rounded-lg bg-white p-3 md:w-1/5">
-              <p style="color:green;">R$ {{ transacao.val_cofrinho }}</p>
-              
+              {% if transacao.tip_transacao == 'Guardar' %}
+                <p style="color:green;">R$ {{ transacao.val_cofrinho }}</p>
+              {% else %}
+                <p style="color:red;">R$ {{ transacao.val_cofrinho }}</p>
+              {% endif %}
             </div>
           </div>
           {% endfor %}
@@ -214,8 +224,11 @@
     >
       <div class="bg-white rounded rounded-lg p-4 w-1/3">
         <h2 class="text-lg font-semibold mb-6">Nova Transação no Cofrinho</h2>
-        <form action="#">
+        <form action="{{ url_for('main.budgets') }}" method="POST">
+          {{ form.csrf_token }}
+
           <div class="mb-4 w-1/2">
+            
             <label class="block text-gray-700 mb-1 text-left" for="objetivo">
               Objetivo
             </label>
@@ -225,36 +238,36 @@
             >
               <option disabled selected>Selecione</option>
               <option value="novo">Novo</option>
+              {% for objetivo in user.objetivos_u %}
+                    <option value="{{ objetivo.nom_objetivo }}">{{ objetivo.nom_objetivo }}</option>
+                {% endfor %}
             </select>
           </div>
 
-          <div class="mb-4 flex justify-between" id="novo_objetivo">
+          <div id="novo_objetivo" class="mb-4 flex justify-between">
             <div class="w-3/4 mr-2">
-              <label
-                class="block text-gray-700 mb-1 text-left"
-                for="descricao_objetivo"
-              >
+              <label class="block text-gray-700 mb-1 text-left" for="descricao_objetivo">
                 Descrição do Objetivo
               </label>
-              <input
-                type="text"
-                class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+              {{form.description(
+                type="text",
+                class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
                 id="descricao_objetivo"
-              />
+              )}}
             </div>
-            <div>
+            <div >
               <label
                 class="block text-gray-700 mb-1 text-left"
                 for="cor_objetivo"
               >
                 Cor
               </label>
-              <input
-                type="color"
-                class="appearance-none rounded h-10 w-full px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-                id="cor_objetivo"
+              {{form.color(
+                type="color",
+                class="appearance-none rounded h-12 w-full px-8 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+                id="cor_objetivo",
                 value="#000000"
-              />
+              )}}
             </div>
           </div>
 
@@ -265,6 +278,7 @@
             <select
               class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
               id="acao"
+              name="action"
             >
               <option selected>Guardar</option>
               <option value="nova">Resgatar</option>
@@ -278,38 +292,34 @@
             >
               Data
             </label>
-            <input
-              type="date"
-              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+            {{form.date(
+              type="date",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
               id="data_transacao"
-            />
+              )}}
           </div>
-
+          
           <div class="mb-4">
             <label class="block text-gray-700 mb-1 text-left" for="valor">
               Valor
             </label>
-            <input
-              type="number"
-              step="0.01"
-              placeholder="R$"
-              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+            {{form.value(
+              type="number",
+              step="0.01",
+              placeholder="R$",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
               id="valor"
-            />
+              )}}
           </div>
 
           <div class="mb-4 flex justify-left">
-            <button
-              class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-            >
-              Adicionar
-            </button>
-            <a
+            {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+
+             <input
+              type="reset" value="Cancelar"
               id="close_add"
               class="bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
             >
-              Cancelar
-            </a>
           </div>
         </form>
       </div>
@@ -319,28 +329,28 @@
       //Abrir Formulario Cofrinho
       $("#form_add").hide();
 
-      //Formulario de adicionar
-      $("#add_cofrinho").click(function () {
-        $("#form_add").fadeIn();
-      });
+        //Formulario de adicionar
+        $("#open_add").click(function () {
+          $("#form_add").fadeIn();
+        });
 
-      $("#close_add").click(function () {
-        $("#form_add").fadeOut();
-      });
+        $("#close_add").click(function () {
+          $("#form_add").fadeOut();
+        });
 
-      //Novo objetivo
-      $("#novo_objetivo").hide();
-
-      $("#objetivo").change(function () {
+        $('#novo_objetivo').hide();
+        
+        //Novo objetivo
+        $('#objetivo').change(function() {
         // Verifica se o valor selecionado é "novo"
-        if ($(this).val() === "novo") {
+        if ($(this).val() === 'novo') {
           // Mostra a div "novo_objetivo"
-          $("#novo_objetivo").show();
+          $('#novo_objetivo').show();
         } else {
           // Oculta a div "novo_objetivo"
-          $("#novo_objetivo").hide();
+          $('#novo_objetivo').hide();
         }
-      });
+        });
     </script>
   </body>
 </html>
