@@ -40,9 +40,20 @@ class RecoveryForm(FlaskForm):
 class IncomeForm(FlaskForm):
     description = StringField('Descrição', validators=[InputRequired(message='Campo em branco')])
     date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
-    new_category = StringField('Cateogia')
-    idd = StringField()
+    new_category = StringField('Categoria')
     value = FloatField('Valor', validators=[InputRequired(message='Campo em branco')])
     submit = SubmitField('Adicionar')
+    idd = StringField()
+
+class PiggyForm(FlaskForm):
+    objective = StringField('Objetivo')
+    description = StringField('Descrição', validators=[InputRequired(message='Campo em branco')])
+    color = StringField('Cor')
+    action = StringField('Ação')
+    date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
+    value = FloatField('Valor', validators=[InputRequired(message='Campo em branco')])
+    submit = SubmitField('Adicionar')
+    idd = StringField()
+
 
 
