@@ -10,7 +10,12 @@ def index():
 @main.route('/home', methods=['GET', 'POST', 'PUT'])
 @login_required
 def home():
-    return render_template('inicio.html', user=current_user)
+    from forms import PiggyForm
+    form = PiggyForm()
+    if request.method=='POST':
+        from models.general import edit_budget
+        return edit_budget()
+    return render_template('inicio.html', user=current_user, form=form)
 
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
@@ -60,7 +65,6 @@ def edit_expenses():
 @login_required
 def delete_expenses(expense_id):
         from models.entities import TransacaoSaida
-
         expense = TransacaoSaida.show_one(expense_id)
 
         from models.general import delete_income
@@ -69,7 +73,12 @@ def delete_expenses(expense_id):
 @main.route('/budgets', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def budgets():
-    return render_template('cofrinho.html', user=current_user)
+    from forms import PiggyForm
+    form = PiggyForm()
+    if form.validate_on_submit():
+        from models.general import add_piggy
+        return add_piggy()
+    return render_template('cofrinho.html', user=current_user, form=form)
 
 @main.route('/analyzes', methods=['GET'])
 @login_required
