@@ -1,4 +1,4 @@
-from models.entities import Usuario, TransacaoEntrada, TransacaoSaida, Categoria
+from models.entities import Usuario, TransacaoEntrada, TransacaoSaida, Categoria, Objetivo, TransacaoCofrinho, Orcamento
 from flask import request, redirect, url_for, flash
 from flask_login import current_user
 from app import db
@@ -192,3 +192,53 @@ def edit_expense():
         
     flash('Saída alterada')
     return redirect(url_for('main.expenses'))
+
+def add_piggy():
+    objective = request.form.get('objective')
+    description = request.form.get('description')
+    color = request.form.get('color')
+    action = request.form.get('action')
+    date = request.form.get('date')
+    value = request.form.get('value')
+
+    user = Usuario.query.get(int(current_user.id))
+
+    date = datetime.strptime(date, '%Y-%m-%d')
+    date1 = str(date)
+    date1 = date1[:10]
+
+    if description:
+        new_objective = Objetivo(nom_objetivo=description, cor_objetivo=color, usuario=user)
+        new_piggy = TransacaoCofrinho(tip_transacao=action, dat_transacao=date, val_cofrinho=value, usuario=user, objetivo=new_objective)
+
+        try:
+            db.session.add_all([new_objective, new_piggy])
+            db.session.commit()
+        except:
+            flash('Não foi possível concluir a transação, por favor tente mais tarde')
+            return redirect(url_for('main.budgets'))
+        
+        flash('Transação adicionada')
+        return redirect(url_for('main.budgets'))
+
+    
+
+    return 'existent budget'
+
+def edit_budget():
+    #return str(request.form)
+    value = request.form.get('value')
+
+    user = Usuario.query.get(int(current_user.id))
+
+    new_budget = Orcamento(val_orcamento_previsto=value, mes_orcamento='Junho', usuario=user)
+
+    try:
+        db.session.add(new_budget)
+        db.session.commit()
+    except:
+        flash('Não foi possível modificar o orçamento previsto')
+        return redirect(url_for('main.home'))
+
+
+    return redirect(url_for('main.home'))
