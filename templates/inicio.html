@@ -134,17 +134,39 @@
 
       <div class="flex flex-row justify-between mx-6">
         <div
-          class="bg-white bg-opacity-75 flex justify-between items-center rounded rounded-lg h-24 w-48 px-4"
+          class="bg-white bg-opacity-75 flex justify-between items-center rounded rounded-lg h-22 w-52 px-4"
         >
           <div class="">
-            <label
-              for="saldo"
-              class="block text-gray-400 mb-1 text-left text-sm"
-              >Saldo</label
-            >
-            <span id="saldo" class="font-semibold text-xl text-gray-700"
-              >R$ 103,97</span
-            >
+            <label for="saldo" class="block text-gray-400 mb-1 text-left text-sm">Saldo</label>
+            <span id="saldo" class="font-semibold text-xl text-gray-700"> 
+              {% set entrada_total = namespace(value=0) %}
+              {% set saida_total = namespace(value=0) %}
+              {% set cofrinho_total = namespace(value=0) %}
+
+              {% for transacao in user.transacoes_entrada_u %}
+                {% set entrada_total.value = entrada_total.value + transacao.val_entrada %}
+              {% endfor %}
+
+              {% for transacao in user.transacoes_saida_u %}
+                {% set saida_total.value = saida_total.value + transacao.val_saida %}
+              {% endfor %}
+
+              {% for transacao in user.transacoes_cofrinho_u %}
+                {% if transacao.tip_transacao == 'Guardar' %}
+                  {% set cofrinho_total.value = cofrinho_total.value + transacao.val_cofrinho %}
+                {% endif %}
+              {% endfor %}
+                
+              {% set saldo = entrada_total.value - saida_total.value - cofrinho_total.value %}
+              
+              {% if saldo < 0 %}
+                <p style="color: red;"> R$ {{ saldo }}</p>
+              {% else %}
+                <p style="color: green;"> R$ {{ saldo }}</p>
+              {% endif %}
+
+
+            </span>
           </div>
           <div class="ml-8 hover:bg-gray-100 rounded rounded-full p-1">
             <a id="ocultar_saldo">
@@ -171,14 +193,16 @@
                 class="block text-gray-400 mb-1 text-left text-sm"
                 >Orçamento Planejado</label
               >
-              <span
-                id="orcamento_planejado"
-                class="font-semibold text-xl text-gray-700"
-                >R$ 103,97</span
-              >
+              <span id="orcamento_planejado" class="font-semibold text-xl text-gray-700" >
+                {% for orcamento in user.orcamentos_u %}
+                  {% if orcamento.mes_orcamento == 'Junho' %}
+                    R$ {{ orcamento.val_orcamento_previsto}}
+                  {% endif %}
+                {% endfor %}
+              </span>
             </div>
             <div class="ml-8 hover:bg-gray-100 rounded rounded-full p-2">
-              <a href="" id="edit_orcamento_planejado">
+              <a id="open_edit">
                 <img
                   src="../static/assets/img/icons/icon-editar.svg"
                   alt="icon-ocultar"
@@ -195,10 +219,14 @@
                 class="block text-gray-400 mb-1 text-left text-sm"
                 >Orçamento Real</label
               >
-              <span
-                id="orcamento_real"
-                class="font-semibold text-xl text-gray-700"
-                >R$ 103,97</span
+              <span id="orcamento_real" class="font-semibold text-xl text-gray-700" >               
+                {% set entrada_total = namespace(value=0) %}
+                {% for entrada in user.transacoes_entrada_u %}
+                  {% set entrada_total.value = entrada_total.value + entrada.val_entrada %}
+                {% endfor %}
+                
+                R$ {{ entrada_total.value }}
+              </span
               >
             </div>
           </div>
@@ -209,7 +237,7 @@
         <div class="flex justify-between items-center w-full text-semibold mb-3">
           <h3 class="font-semibold">Cofrinho</h3>
           <div class="ml-8 hover:bg-gray-100 rounded rounded-full p-2">
-            <a href="#" id="add_cofrinho">
+            <a href="#" id="open_add">
               <img
                 src="../static/assets/img/icons/icon-mais.svg"
                 alt="icon-mais"
@@ -217,17 +245,24 @@
             </a>
           </div>
         </div>
+          {% for transacao in user.transacoes_cofrinho_u %}
           <div class="flex justify-between items-center w-full text-semibold pb-2">
             <div class="flex items-center justify-center">
-              <div class="w-3 h-3 bg-red-500 rounded rounded-full mr-3"></div>
-              <p class="text-sm">Viagem</p>
+              <div class="w-3 h-3 rounded rounded-full mr-3" style="background-color: {{ transacao.objetivo.cor_objetivo|safe }};"></div>
+
+              <p class="text-sm">{{ transacao.objetivo.nom_objetivo }}</p>
             </div>
             <div>
-              <p class="text-gray-400 text-sm">R$ 796,00</p>
+              <p class="text-gray-400 text-sm">R$ {{transacao.val_cofrinho}}</p>
             </div>
+            
           </div>
+
+          {% endfor %}
+
+
+
         </div>
-          
         </div>
       </div>
     </main>
@@ -238,8 +273,12 @@
     >
       <div class="bg-white rounded rounded-lg p-4 w-1/3">
         <h2 class="text-lg font-semibold mb-6">Nova Transação no Cofrinho</h2>
-        <form action="#">
+        <form action="{{ url_for('main.budgets') }}" method="POST">
+
+          {{ form.csrf_token }}
+
           <div class="mb-4 w-1/2">
+            
             <label class="block text-gray-700 mb-1 text-left" for="objetivo">
               Objetivo
             </label>
@@ -247,21 +286,24 @@
               class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
               id="objetivo"
             >
-              <option disabled>Selecione</option>
-              <option selected value="novo">Novo</option>
+              <option disabled selected>Selecione</option>
+              <option value="novo">Novo</option>
+              {% for objetivo in user.objetivos_u %}
+                    <option value="{{ objetivo.nom_objetivo }}">{{ objetivo.nom_objetivo }}</option>
+                {% endfor %}
             </select>
           </div>
 
-          <div class="mb-4 flex justify-between" id="novo_objetivo">
+          <div id="novo_objetivo" class="mb-4 flex justify-between">
             <div class="w-3/4 mr-2">
               <label class="block text-gray-700 mb-1 text-left" for="descricao_objetivo">
                 Descrição do Objetivo
               </label>
-              <input
-                type="text"
-                class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+              {{form.description(
+                type="text",
+                class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
                 id="descricao_objetivo"
-              />
+              )}}
             </div>
             <div >
               <label
@@ -270,12 +312,12 @@
               >
                 Cor
               </label>
-              <input
-                type="color"
-                class="appearance-none rounded h-10 w-full px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-                id="cor_objetivo"
+              {{form.color(
+                type="color",
+                class="appearance-none rounded h-12 w-full px-8 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+                id="cor_objetivo",
                 value="#000000"
-              />
+              )}}
             </div>
           </div>
 
@@ -286,6 +328,7 @@
             <select
               class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
               id="acao"
+              name="action"
             >
               <option selected>Guardar</option>
               <option value="nova">Resgatar</option>
@@ -299,43 +342,77 @@
             >
               Data
             </label>
-            <input
-              type="date"
-              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+            {{form.date(
+              type="date",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
               id="data_transacao"
-            />
+              )}}
           </div>
           
           <div class="mb-4">
             <label class="block text-gray-700 mb-1 text-left" for="valor">
               Valor
             </label>
-            <input
-              type="number"
-              step="0.01"
-              placeholder="R$"
-              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+            {{form.value(
+              type="number",
+              step="0.01",
+              placeholder="R$",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
               id="valor"
-            />
+              )}}
           </div>
 
           <div class="mb-4 flex justify-left">
-            <button
-              class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-            >
-              Adicionar
-            </button>
-            <a
+            {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+
+             <input
+              type="reset" value="Cancelar"
               id="close_add"
               class="bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
             >
-              Cancelar
-            </a>
           </div>
         </form>
       </div>
     </div>
 
+    <div id="form_edit" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded rounded-lg p-4 w-1/3">
+        <h2 class="text-lg font-semibold mb-6">Editar Orçamento Planejado</h2>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-1 text-left" for="descricao">
+          <form method="POST" action="{{ url_for('main.home') }}">
+            {{ form.csrf_token }}
+            {{ form.idd(type="text", class = "hidden") }}
+            
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1 text-left" for="valor">
+              Valor
+            </label>
+            {{form.value (
+              type="number",
+              step="0.01",
+              placeholder="R$",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+              id="valor" )}}
+          </div>
+
+          <div class="mb-4 flex justify-between">
+            <div class="flex justify-left">
+              {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+
+              <input
+              id="close_edit" 
+              type="reset" value="Cancelar"
+              class="bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
+            >
+            </div>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <script>
       $(document).ready(function () {
         //Ocultar e mostrar saldo
@@ -346,33 +423,51 @@
         });
 
         $("#mostrar_saldo").click(function () {
-          $("#saldo").text("103,97"); //Inserir o valor do saldo dinamicamente
+          
+          saldo = "R$ {{ saldo }}"
+
+          if (saldo > 0) {
+            $("#saldo").text(saldo).css("color", "green"); // Define a cor do texto como verde
+          } else {
+            $("#saldo").text(saldo).css("color", "red"); // Define a cor do texto como vermelho
+          }
+
           $("#ocultar_saldo").show();
           $("#mostrar_saldo").hide();
-        });
+        });    
 
         //Editar Orçamento Planejado
-        $("#edit_orcamento_planejado").click(function (e) {
-          e.preventDefault();
-          var valorAtual = $("#orcamento_planejado").html().trim();
-          $("#orcamento_planejado").html(
-            '<input type="number" step="0,01" id="input_orcamento_planejado" class="font-semibold text-xl text-gray-700 bg-white bg-opacity-0 w-36" value="' +
-              valorAtual +
-              '" />'
-          );
-          $("#input_orcamento_planejado").keypress(function (e) {
-            if (e.which == 13) {
-              var novoValor = $("#input_orcamento_planejado").val();
-              $("#orcamento_planejado").html(novoValor);
-            }
-          });
+
+        $("#form_edit").hide();
+
+        $("#open_edit").click(function() {
+          $("#form_edit").fadeIn();
         });
+      
+        $("#close_edit").click(function () {
+          $("#form_edit").fadeOut();
+        });
+        // $("#edit_orcamento_planejado").click(function (e) {
+        //   e.preventDefault();
+        //   var valorAtual = $("#orcamento_planejado").html().trim();
+        //   $("#orcamento_planejado").html(
+        //     '<input type="number" step="0,01" id="input_orcamento_planejado" class="font-semibold text-xl text-gray-700 bg-white bg-opacity-0 w-36" value="' +
+        //       valorAtual +
+        //       '" />'
+        //   );
+        //   $("#input_orcamento_planejado").keypress(function (e) {
+        //     if (e.which == 13) {
+        //       var novoValor = $("#input_orcamento_planejado").val();
+        //       $("#orcamento_planejado").html("R$" + novoValor);
+        //     }
+        //   });
+        // });
 
         //Abrir Formulario Cofrinho
-        $("#form_add").hide();
+       $("#form_add").hide();
 
         //Formulario de adicionar
-        $("#add_cofrinho").click(function () {
+        $("#open_add").click(function () {
           $("#form_add").fadeIn();
         });
 
@@ -380,6 +475,8 @@
           $("#form_add").fadeOut();
         });
 
+        $('#novo_objetivo').hide();
+        
         //Novo objetivo
         $('#objetivo').change(function() {
         // Verifica se o valor selecionado é "novo"
@@ -390,7 +487,7 @@
           // Oculta a div "novo_objetivo"
           $('#novo_objetivo').hide();
         }
-      });
+        });
 
       });
     </script>
