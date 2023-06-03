@@ -30,13 +30,11 @@ class Usuario(db.Model, UserMixin):
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'
     id = db.Column(db.Integer, primary_key=True)
-    val_orcamento = db.Column(db.Float(64))
-    dat_orcamento = db.Column(db.Date(), nullable=False)
+    val_orcamento_real = db.Column(db.Float(64))
+    val_orcamento_previsto = db.Column(db.Float(64))
+    mes_orcamento = db.Column(db.String(), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    
-    def __repr__(self):
-        return f'<Valor Orçamento: {self.val_orcamento} | Data: {self.dat_orcamento}>'
-    
+     
 class TransacaoEntrada(db.Model):
     __tablename__ = 'transacoes_entrada'
     id = db.Column(db.Integer, primary_key=True)
@@ -91,7 +89,7 @@ class Categoria(db.Model):
 class Objetivo(db.Model):
     __tablename__ = 'objetivos'
     id = db.Column(db.Integer, primary_key=True)
-    dsc_objetivo = db.Column(db.String(64), nullable=False)
+    nom_objetivo = db.Column(db.String(64), nullable=False)
     cor_objetivo = db.Column(db.String(64), nullable=True)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
    
