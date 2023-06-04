@@ -173,6 +173,7 @@ def edit_expense():
     x += ('true' if edit_expense.dsc_saida == expense_description else 'false')
     x += ('true' if edit_expense.val_saida == float(value) else 'false')    
     x += ('true' if str(edit_expense.dat_saida) == date1 else 'false')
+
     print(x)
 
     if not 'false' in x:
@@ -194,7 +195,6 @@ def edit_expense():
     return redirect(url_for('main.expenses'))
 
 def add_piggy():
-    objective = request.form.get('objective')
     description = request.form.get('description')
     color = request.form.get('color')
     action = request.form.get('action')
@@ -208,11 +208,17 @@ def add_piggy():
     date1 = date1[:10]
 
     if description:
-        new_objective = Objetivo(nom_objetivo=description, cor_objetivo=color, usuario=user)
-        new_piggy = TransacaoCofrinho(tip_transacao=action, dat_transacao=date, val_cofrinho=value, usuario=user, objetivo=new_objective)
+        search_objective = Objetivo.query.filter_by(nom_objetivo=description).first()
+
+        if search_objective:
+            new_piggy = TransacaoCofrinho(tip_transacao=action, dat_transacao=date, val_cofrinho=value, usuario=user, objetivo=search_objective)
+            db.session.add(new_piggy)
+        else:
+            new_objective = Objetivo(nom_objetivo=description, cor_objetivo=color, usuario=user)
+            new_piggy = TransacaoCofrinho(tip_transacao=action, dat_transacao=date, val_cofrinho=value, usuario=user, objetivo=new_objective)
+            db.session.add_all([new_objective, new_piggy])
 
         try:
-            db.session.add_all([new_objective, new_piggy])
             db.session.commit()
         except:
             flash('Não foi possível concluir a transação, por favor tente mais tarde')
@@ -221,24 +227,102 @@ def add_piggy():
         flash('Transação adicionada')
         return redirect(url_for('main.budgets'))
 
-    
 
-    return 'existent budget'
+    selected_option = request.form.get('selected_option')
+
+    if not selected_option:
+        flash('Nenhum objetivo foi selecionado')
+        return redirect(url_for('main.budgets'))
+    
+    objective = Objetivo.query.filter_by(nom_objetivo=selected_option).first()
+    
+    new_piggy = TransacaoCofrinho(tip_transacao=action, dat_transacao=date, val_cofrinho=value, usuario=user, objetivo=objective)
+
+    try:
+        db.session.add(new_piggy)
+        db.session.commit()
+    except:
+        flash('Não foi possível concluir a transação, por favor tente mais tarde')
+        return redirect(url_for('main.budgets'))
+    
+    flash('Transação adicionada')
+    return redirect(url_for('main.budgets'))
 
 def edit_budget():
     #return str(request.form)
+    selected_option = request.form.get('selected_option')
+    description = request.form.get('description')
+    color = request.form.get('color')
+    action = request.form.get('action')
+    date = request.form.get('date')
     value = request.form.get('value')
-
+    idd = request.form.get('idd')
+    
+    date = datetime.strptime(date, '%Y-%m-%d')
+    date1 = str(date)
+    date1 = date1[:10]
+    
     user = Usuario.query.get(int(current_user.id))
 
-    new_budget = Orcamento(val_orcamento_previsto=value, mes_orcamento='Junho', usuario=user)
+    edit_budget = TransacaoCofrinho.query.get(int(idd))
+    
+    x = ''
+    x += ('true' if edit_budget.tip_transacao == action else 'false')
+    x += ('true' if edit_budget.val_cofrinho == float(value) else 'false')    
+    x += ('true' if str(edit_budget.dat_transacao) == date1 else 'false')
 
+    if description == '':
+
+        objective = Objetivo.query.filter_by(nom_objetivo=selected_option).first()
+
+        x += ('true' if str(edit_budget.cod_objetivo) == str(objective.id) else 'false')
+        
+        if not 'false' in x:
+            flash('Nenhum campo foi alterado')
+            return redirect(url_for('main.budgets'))
+        
+        edit_budget.tip_transacao = action
+        edit_budget.dat_transacao = date 
+        edit_budget.val_cofrinho = value
+        edit_budget.cod_objetivo = objective.id
+        
+        try:
+            db.session.add(edit_budget)
+            db.session.commit()
+        except:
+            flash('Não foi possível alterar a transação, por favor tente mais tarde')
+            return redirect(url_for('main.budgets'))
+            
+        flash('Transação alterada')
+        return redirect(url_for('main.budgets'))
+    
+    else:
+        search_objective = Objetivo.query.filter_by(nom_objetivo=description).first()
+
+        if search_objective:
+            edit_budget.cod_objetivo = search_objective.id
+            db.session.add(edit_budget)
+        else:
+            new_objective = Objetivo(nom_objetivo=description, cor_objetivo=color, usuario=user)
+            edit_budget.objetivo = new_objective
+            db.session.add_all([new_objective, edit_budget])
+
+        try:
+            db.session.commit()
+        except:
+            flash('Não foi possível alterar a transação, por favor tente mais tarde')
+            return redirect(url_for('main.budgets'))
+            
+        flash('Transação alterada')
+        return redirect(url_for('main.budgets'))
+
+def delete_budget(old_budget):
     try:
-        db.session.add(new_budget)
+        db.session.delete(old_budget)
         db.session.commit()
     except:
-        flash('Não foi possível modificar o orçamento previsto')
-        return redirect(url_for('main.home'))
-
-
-    return redirect(url_for('main.home'))
+        flash('Não foi possível excluir a transação, por favor tente mais tarde')
+        return redirect(url_for('main.budgets'))
+    
+    flash('Transação excluída')
+    return redirect(url_for('main.budgets'))
