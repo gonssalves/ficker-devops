@@ -365,6 +365,7 @@
             class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
             id="valor" )}}
         </div>
+        
         <div class="mb-4 flex justify-between">
           <div class="flex justify-left">
             {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
@@ -374,15 +375,19 @@
             class="close_edit bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
           >
           </div>
+          
+          </form>
+
           <div class="my-auto rounded rounded-full hover:bg-gray-100 p-3">
             <button id="deleteButton">
               <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
-            </button>   
-          </form>
+            </button>  
+          </div> 
+
           </div>
         </div>
       </div>
-    </div>
+    
     <script>
       $(document).ready(function() {
       // Manipulador de eventos de clique para o botão de edição
