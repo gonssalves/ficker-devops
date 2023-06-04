@@ -78,7 +78,7 @@
         </li>
         <li class="p-3 rounded-lg font-semibold bg-red-500">
           <a
-            href="{{url_for('main.budgets')}}"
+            href="{{url_for('main.piggy')}}"
             class="flex items-center text-white px-4"
           >
             <img
@@ -193,7 +193,7 @@
           {% for transacao in user.transacoes_cofrinho_u %}
           <div class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-1 text-gray-500">
             <div class="rounded-lg bg-white p-1 mr-2 md:w-1/5">
-              <a class="open_edit open-edit-button rounded rounded-full w-full", data-budget-id ="{{ transacao.id }}">
+              <a class="open_edit open-edit-button rounded rounded-full w-full", data-piggy-id ="{{ transacao.id }}">
                 <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto my-auto p-3 hover:bg-gray-100 rounded rounded-lg"/>
               </a>              
             </div>
@@ -225,7 +225,7 @@
     >
       <div class="bg-white rounded rounded-lg p-4 w-1/3">
         <h2 class="text-lg font-semibold mb-6">Nova Transação no Cofrinho</h2>
-        <form action="{{ url_for('main.budgets') }}" method="POST">
+        <form action="{{ url_for('main.piggy') }}" method="POST">
           {{ form.csrf_token }}
 
           <div class="mb-4 w-1/2">
@@ -329,7 +329,7 @@
     <div class="form_edit fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded rounded-lg p-4 w-1/3">
         <h2 class="text-lg font-semibold mb-6">Nova Transação no Cofrinho</h2>      
-        <form action="{{ url_for('main.edit_budgets') }}" method="POST">
+        <form action="{{ url_for('main.edit_piggy') }}" method="POST">
 
           {{ form.csrf_token }}
           {{ form.idd(type="text", class = "hidden") }}
@@ -456,12 +456,12 @@
       // Manipulador de eventos de clique para o botão de edição
       $(".open_edit").click(function() {
         // Obtém o ID da entrada a partir do atributo de dados
-        var budgetId = $(this).data("budget-id");
+        var piggyId = $(this).data("piggy-id");
         
         // Encontre a entrada correspondente nos dados do usuário
         "{% for transacao in user.transacoes_cofrinho_u %}"
-          var budget_id = "{{ transacao.id }}";
-          if(budget_id == budgetId){
+          var piggy_id = "{{ transacao.id }}";
+          if(piggy_id == piggyId){
             $(".form_edit input[name='idd']").val("{{ transacao.id }}");
             $(".form_edit select[name='selected_option']").val("{{ transacao.objetivo.nom_objetivo }}");
             $(".form_edit select[name='action']").val("{{ transacao.tip_transacao }}");
@@ -479,13 +479,13 @@
       $(document).ready(function() {
       $('.open_edit').on('click', function(event) {
         var button = $(this);
-        var budgetId = button.data('budget-id');
-        $('#deleteButton').data('budget-id', budgetId);
+        var piggyId = button.data('piggy-id');
+        $('#deleteButton').data('piggy-id', piggyId);
       });
 
       $('#deleteButton').click(function() {
-        var budgetId = $(this).data('budget-id');
-        window.location.href = 'budgets/' + budgetId + '/delete';
+        var piggyId = $(this).data('piggy-id');
+        window.location.href = 'piggy-bank/' + piggyId + '/delete';
       });
     });
  

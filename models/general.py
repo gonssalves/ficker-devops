@@ -222,17 +222,17 @@ def add_piggy():
             db.session.commit()
         except:
             flash('Não foi possível concluir a transação, por favor tente mais tarde')
-            return redirect(url_for('main.budgets'))
+            return redirect(url_for('main.piggy'))
         
         flash('Transação adicionada')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
 
 
     selected_option = request.form.get('selected_option')
 
     if not selected_option:
         flash('Nenhum objetivo foi selecionado')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
     
     objective = Objetivo.query.filter_by(nom_objetivo=selected_option).first()
     
@@ -243,12 +243,12 @@ def add_piggy():
         db.session.commit()
     except:
         flash('Não foi possível concluir a transação, por favor tente mais tarde')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
     
     flash('Transação adicionada')
-    return redirect(url_for('main.budgets'))
+    return redirect(url_for('main.piggy'))
 
-def edit_budget():
+def edit_piggy():
     #return str(request.form)
     selected_option = request.form.get('selected_option')
     description = request.form.get('description')
@@ -279,7 +279,7 @@ def edit_budget():
         
         if not 'false' in x:
             flash('Nenhum campo foi alterado')
-            return redirect(url_for('main.budgets'))
+            return redirect(url_for('main.piggy'))
         
         edit_budget.tip_transacao = action
         edit_budget.dat_transacao = date 
@@ -291,10 +291,10 @@ def edit_budget():
             db.session.commit()
         except:
             flash('Não foi possível alterar a transação, por favor tente mais tarde')
-            return redirect(url_for('main.budgets'))
+            return redirect(url_for('main.piggy'))
             
         flash('Transação alterada')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
     
     else:
         search_objective = Objetivo.query.filter_by(nom_objetivo=description).first()
@@ -311,18 +311,37 @@ def edit_budget():
             db.session.commit()
         except:
             flash('Não foi possível alterar a transação, por favor tente mais tarde')
-            return redirect(url_for('main.budgets'))
+            return redirect(url_for('main.piggy'))
             
         flash('Transação alterada')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
 
-def delete_budget(old_budget):
+def delete_piggy(old_piggy):
     try:
-        db.session.delete(old_budget)
+        db.session.delete(old_piggy)
         db.session.commit()
     except:
         flash('Não foi possível excluir a transação, por favor tente mais tarde')
-        return redirect(url_for('main.budgets'))
+        return redirect(url_for('main.piggy'))
     
     flash('Transação excluída')
-    return redirect(url_for('main.budgets'))
+    return redirect(url_for('main.piggy'))
+
+
+def edit_budget():
+    #return str(request.form)
+    value = request.form.get('value')
+
+    user = Usuario.query.get(int(current_user.id))
+
+    for orcamento in user.orcamentos_u:
+        if orcamento.mes_orcamento == 'Junho':
+            orcamento.val_orcamento_previsto = value
+
+    try:
+        db.session.commit()
+    except:
+        flash('Não foi possível editar o orçamento, por favor tente mais tarde')
+        return redirect(url_for('main.home'))
+    
+    return redirect(url_for('main.home'))

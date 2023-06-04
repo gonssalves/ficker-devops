@@ -13,9 +13,16 @@ def home():
     from forms import PiggyForm
     form = PiggyForm()
     if request.method=='POST':
-        from models.general import edit_budget
-        return edit_budget()
+        from models.general import edit_piggy
+        return edit_piggy()
     return render_template('inicio.html', user=current_user, form=form)
+
+@main.route('/home/edit-budget', methods=['POST'])
+@login_required
+def home_edit_budget():
+    from models.general import edit_budget
+    
+    return edit_budget()
 
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
@@ -70,9 +77,9 @@ def delete_expenses(expense_id):
         from models.general import delete_expense
         return delete_expense(expense)
 
-@main.route('/budgets', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@main.route('/piggy-bank', methods=['GET', 'POST'])
 @login_required
-def budgets():
+def piggy():
     from forms import PiggyForm
     form = PiggyForm()
     if form.validate_on_submit():
@@ -80,21 +87,21 @@ def budgets():
         return add_piggy()
     return render_template('cofrinho.html', user=current_user, form=form)
 
-@main.route('/budgets/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@main.route('/piggy-bank/edit', methods=['GET'])
 @login_required
-def edit_budgets():
-    from models.general import edit_budget
+def edit_piggy():
+    from models.general import edit_piggy
 
-    return edit_budget()
+    return edit_piggy()
 
-@main.route('/budgets/<int:budget_id>/delete', methods=['GET'])
+@main.route('/piggy-bank/<int:piggy_id>/delete', methods=['GET'])
 @login_required
-def delete_budgets(budget_id):
+def delete_piggy(piggy_id):
         from models.entities import TransacaoCofrinho
-        budget = TransacaoCofrinho.show_one(budget_id)
+        piggy = TransacaoCofrinho.show_one(piggy_id)
 
-        from models.general import delete_budget
-        return delete_budget(budget)
+        from models.general import delete_piggy
+        return delete_piggy(piggy)
 
 @main.route('/analyzes', methods=['GET'])
 @login_required
