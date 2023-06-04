@@ -424,12 +424,11 @@
 
         $("#mostrar_saldo").click(function () {
           
-          saldo = "R$ {{ saldo }}"
-
+          saldo = "{{ saldo }}"
           if (saldo > 0) {
-            $("#saldo").text(saldo).css("color", "green"); // Define a cor do texto como verde
+            $("#saldo").text("R$" + " " + saldo).css("color", "green"); // Define a cor do texto como verde
           } else {
-            $("#saldo").text(saldo).css("color", "red"); // Define a cor do texto como vermelho
+            $("#saldo").text("R$" + " " + saldo).css("color", "red"); // Define a cor do texto como vermelho
           }
 
           $("#ocultar_saldo").show();
