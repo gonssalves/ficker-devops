@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
@@ -192,7 +193,7 @@
           {% for transacao in user.transacoes_cofrinho_u %}
           <div class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-1 text-gray-500">
             <div class="rounded-lg bg-white p-1 mr-2 md:w-1/5">
-              <a class="open_edit open-edit-button rounded rounded-full w-full", data-income-id ="{{ transacao.id }}">
+              <a class="open_edit open-edit-button rounded rounded-full w-full", data-budget-id ="{{ transacao.id }}">
                 <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto my-auto p-3 hover:bg-gray-100 rounded rounded-lg"/>
               </a>              
             </div>
@@ -235,6 +236,7 @@
             <select
               class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
               id="objetivo"
+              name="selected_option"
             >
               <option disabled selected>Selecione</option>
               <option value="novo">Novo</option>
@@ -277,11 +279,10 @@
             </label>
             <select
               class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
-              id="acao"
               name="action"
             >
-              <option selected>Guardar</option>
-              <option value="nova">Resgatar</option>
+              <option selected value="Guardar">Guardar</option>
+              <option value="Resgatar">Resgatar</option>
             </select>
           </div>
 
@@ -325,9 +326,93 @@
       </div>
     </div>
 
+    <div class="form_edit fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded rounded-lg p-4 w-1/3">
+        <h2 class="text-lg font-semibold mb-6">Nova Transação no Cofrinho</h2>      
+        <form action="{{ url_for('main.edit_budgets') }}" method="POST">
+
+          {{ form.csrf_token }}
+          {{ form.idd(type="text", class = "hidden") }}
+
+          <div class="mb-4 w-1/2">  
+            <label class="block text-gray-700 mb-1 text-left" for="objetivo">Objetivo</label>
+            <select class="objetivo rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline" name="selected_option">
+              <option disabled selected>Selecione</option>
+              <option value="novo">Novo</option>
+              {% for objetivo in user.objetivos_u %}
+                    <option value="{{ objetivo.nom_objetivo }}">{{ objetivo.nom_objetivo }}</option>
+                {% endfor %}
+            </select>
+          </div>
+
+          <div class="novo_objetivo mb-4 flex justify-between">
+            <div class="w-3/4 mr-2">
+              <label class="block text-gray-700 mb-1 text-left" for="descricao_objetivo">
+                Descrição do Objetivo
+              </label>
+              {{form.description(type="text", class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="descricao_objetivo" )}}
+            </div>
+
+            <div >
+              <label class="block text-gray-700 mb-1 text-left" for="cor_objetivo">
+                Cor
+              </label>
+              {{form.color( type="color", class="appearance-none rounded h-12 w-full px-8 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="cor_objetivo", value="#000000" )}}
+            </div>
+          </div>
+
+          <div class="mb-4 w-1/2">
+            <label class="block text-gray-700 mb-1 text-left" for="acao">
+              Ação
+            </label>
+            <select class="rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline" id="acao" name="action" >
+              <option value="Guardar">Guardar</option>
+              <option value="Resgatar">Resgatar</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1 text-left" for="data_transacao">
+              Data
+            </label>
+            {{form.date( type="date", class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="data_transacao" )}}
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1 text-left" for="valor">
+              Valor
+            </label>
+            {{form.value( type="number", step="0.01", placeholder="R$", class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline", id="valor" )}}
+          </div>
+          <div class="flex justify-left">
+            {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+            <input type="reset" value="Cancelar" class="close_edit bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3" >
+          </div>
+
+        </form>
+
+          <div class="mb-4 flex justify-between">
+            
+          <div class="my-auto rounded rounded-full hover:bg-gray-100 p-3">
+            <button id="deleteButton">
+              <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
+            </button>  
+          </div> 
+          
+        </div>
+          </div>
+        </div>
+  
+
     <script>
       //Abrir Formulario Cofrinho
-      $("#form_add").hide();
+        $("#form_add").hide();
+        $(".form_edit").hide();
+
+
+        $(".close_edit").click(function () {
+          $(".form_edit").fadeOut();
+        });
 
         //Formulario de adicionar
         $("#open_add").click(function () {
@@ -351,6 +436,59 @@
           $('#novo_objetivo').hide();
         }
         });
+
+
+        $('.novo_objetivo').hide();
+        
+        //Novo objetivo
+        $('.objetivo').change(function() {
+        // Verifica se o valor selecionado é "novo"
+        if ($(this).val() === 'novo') {
+          // Mostra a div "novo_objetivo"
+          $('.novo_objetivo').show();
+        } else {
+          // Oculta a div "novo_objetivo"
+          $('.novo_objetivo').hide();
+        }
+        });
+
+        $(document).ready(function() {
+      // Manipulador de eventos de clique para o botão de edição
+      $(".open_edit").click(function() {
+        // Obtém o ID da entrada a partir do atributo de dados
+        var budgetId = $(this).data("budget-id");
+        
+        // Encontre a entrada correspondente nos dados do usuário
+        "{% for transacao in user.transacoes_cofrinho_u %}"
+          var budget_id = "{{ transacao.id }}";
+          if(budget_id == budgetId){
+            $(".form_edit input[name='idd']").val("{{ transacao.id }}");
+            $(".form_edit select[name='selected_option']").val("{{ transacao.objetivo.nom_objetivo }}");
+            $(".form_edit select[name='action']").val("{{ transacao.tip_transacao }}");
+            $(".form_edit input[name='date']").val("{{ transacao.dat_transacao }}");
+            $(".form_edit input[name='value']").val("{{ transacao.val_cofrinho }}");
+
+          }
+        "{% endfor %}"
+
+        // Exiba o formulário de edição
+        $(".form_edit").fadeIn();
+      });
+      });
+
+      $(document).ready(function() {
+      $('.open_edit').on('click', function(event) {
+        var button = $(this);
+        var budgetId = button.data('budget-id');
+        $('#deleteButton').data('budget-id', budgetId);
+      });
+
+      $('#deleteButton').click(function() {
+        var budgetId = $(this).data('budget-id');
+        window.location.href = 'budgets/' + budgetId + '/delete';
+      });
+    });
+ 
     </script>
   </body>
 </html>
