@@ -99,7 +99,15 @@ def delete_budgets(budget_id):
 @main.route('/analyzes', methods=['GET'])
 @login_required
 def analyzes():
-    return render_template('analises.html', user=current_user)
+    from models.entities import Usuario
+
+    total = Usuario.total(current_user)
+
+    most_recents = Usuario.most_recents(current_user)
+
+    lista =  Usuario.monthly(current_user)
+
+    return render_template('analises.html', user=current_user, incomes=total['entrada'], expenses=total['saida'], budgets=total['cofrinho'], total=total['total'], most_recents=most_recents, lista=lista)
 
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
