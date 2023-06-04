@@ -106,6 +106,12 @@ class TransacaoCofrinho(db.Model):
     val_cofrinho = db.Column(db.Float(64), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_objetivo = db.Column(db.Integer, db.ForeignKey('objetivos.id'))
-   
+
+    def show_one(budget_id):
+        return TransacaoCofrinho.query.get(int(budget_id))
+    
+    objetivos = db.relationship('Objetivo', backref='transacao_cofrinho', lazy=True)
+
+        
     # def __repr__(self):
     #     return f'<Transação Cofrinho: {self.tip_transacao} | Data: {self.dat_transacao}> | Valor: {self.val_cofrinho}'
