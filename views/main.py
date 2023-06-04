@@ -67,8 +67,8 @@ def delete_expenses(expense_id):
         from models.entities import TransacaoSaida
         expense = TransacaoSaida.show_one(expense_id)
 
-        from models.general import delete_income
-        return delete_income(expense)
+        from models.general import delete_expense
+        return delete_expense(expense)
 
 @main.route('/budgets', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
@@ -79,6 +79,22 @@ def budgets():
         from models.general import add_piggy
         return add_piggy()
     return render_template('cofrinho.html', user=current_user, form=form)
+
+@main.route('/budgets/edit', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@login_required
+def edit_budgets():
+    from models.general import edit_budget
+
+    return edit_budget()
+
+@main.route('/budgets/<int:budget_id>/delete', methods=['GET'])
+@login_required
+def delete_budgets(budget_id):
+        from models.entities import TransacaoCofrinho
+        budget = TransacaoCofrinho.show_one(budget_id)
+
+        from models.general import delete_budget
+        return delete_budget(budget)
 
 @main.route('/analyzes', methods=['GET'])
 @login_required
