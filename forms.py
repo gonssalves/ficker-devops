@@ -46,8 +46,7 @@ class IncomeForm(FlaskForm):
     idd = StringField()
 
 class PiggyForm(FlaskForm):
-    objective = StringField('Objetivo')
-    description = StringField('Descrição', validators=[InputRequired(message='Campo em branco')])
+    description = StringField('Descrição')
     color = StringField('Cor')
     action = StringField('Ação')
     date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
