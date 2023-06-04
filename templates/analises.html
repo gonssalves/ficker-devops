@@ -139,7 +139,7 @@
               <label class="block text-gray-400 mb-1 text-left text-sm"
                 >Transações Totais</label
               >
-              <span class="font-semibold text-xl text-gray-700">131</span>
+              <span class="font-semibold text-xl text-gray-700">{{ total }}</span>
             </div>
             <div class="chart ml-auto rounded-full h-16 w-16">
               <canvas id="grafico-transacoes-totais"></canvas>
@@ -151,7 +151,7 @@
               <label class="block text-gray-400 mb-1 text-left text-sm"
                 >Transações de Entrada</label
               >
-              <span class="font-semibold text-xl text-gray-700">94</span>
+              <span class="font-semibold text-xl text-gray-700">{{ incomes }}</span>
             </div>
             <div class="chart ml-auto rounded-full h-16 w-16">
               <canvas id="grafico-transacoes-entradas"></canvas>
@@ -163,7 +163,7 @@
               <label class="block text-gray-400 mb-1 text-left text-sm"
                 >Transações de Saída</label
               >
-              <span class="font-semibold text-xl text-gray-700">29</span>
+              <span class="font-semibold text-xl text-gray-700">{{ expenses }}</span>
             </div>
             <div class="chart ml-auto rounded-full h-16 w-16">
               <canvas id="grafico-transacoes-saidas"></canvas>
@@ -175,7 +175,7 @@
               <label class="block text-gray-400 mb-1 text-left text-sm"
                 >Transações no Cofrinho</label
               >
-              <span class="font-semibold text-xl text-gray-700">8</span>
+              <span class="font-semibold text-xl text-gray-700">{{ budgets }}</span>
             </div>
             <div class="chart ml-auto rounded-full h-16 w-16">
               <canvas id="grafico-transacoes-cofrinho"></canvas>
@@ -192,52 +192,31 @@
             </div>
           </div>
           <div class="bg-white bg-opacity-75 p-4 rounded-lg ml-6 w-1/3">
-            <h3 class="text-md font-semibold mb-4">Transações recentes</h3>
+            <h3 class="text-md font-semibold mb-4">Transações Mais Recentes</h3>
             <ul class="space-y-2">
+              {% for transacao in most_recents%}
               <li class="px-2 rounded-lg flex items-center">
-                <img
-                  class="mr-2"
-                  src="../static/assets/img/icons/icon-entradas.svg"
-                  alt="logo"
-                />
+                {% if transacao.type == 'Entrada' %}
+                  <img class="mr-2" src="../static/assets/img/icons/icon-entradas.svg" alt="logo"/>
+                {% elif transacao.type == 'Saída' %}
+                  <img class="mr-2" src="../static/assets/img/icons/icon-saidas.svg" alt="logo"/>
+                {% elif transacao.type == 'Cofrinho - Guardar' or transacao.type == 'Cofrinho - Resgatar' %}
+                  <img class="mr-2" src="../static/assets/img/icons/icon-cofrinho.svg" alt="logo"/>
+
+                {% endif %}
+              
                 <div class="ml-4">
-                  Entrada
-                  <p class="text-gray-500 text-sm">R$ 133,00</p>
+                  {{ transacao.type }}
+                  {% if transacao.type == 'Entrada' or transacao.type == 'Cofrinho - Guardar'%}
+                    <p class="text-green-500 text-sm">R$ {{ transacao.value }}</p>
+                  {% else %}
+                    <p class="text-red-500 text-sm">R$ {{ transacao.value }}</p>
+                  {% endif %}
                 </div>
               </li>
-              <li class="px-2 rounded-lg flex items-center">
-                <img
-                  class="mr-2"
-                  src="../static/assets/img/icons/icon-entradas.svg"
-                  alt="logo"
-                />
-                <div class="ml-4">
-                  Entrada
-                  <p class="text-gray-500 text-sm">R$ 81,00</p>
-                </div>
-              </li>
-              <li class="px-2 rounded-lg flex items-center">
-                <img
-                  class="mr-2"
-                  src="../static/assets/img/icons/icon-saidas.svg"
-                  alt="logo"
-                />
-                <div class="ml-4">
-                  Saída
-                  <p class="text-gray-500 text-sm">R$ 233,00</p>
-                </div>
-              </li>
-              <li class="px-2 rounded-lg flex items-center">
-                <img
-                  class="mr-2"
-                  src="../static/assets/img/icons/icon-entradas.svg"
-                  alt="logo"
-                />
-                <div class="ml-4">
-                  Entrada
-                  <p class="text-gray-500 text-sm">R$ 15,00</p>
-                </div>
-              </li>
+              
+              {% endfor %}
+         
             </ul>
           </div>
         </div>
@@ -266,9 +245,20 @@
           ],
           datasets: [
             {
-              label: "Valor total de Entradas",
+              label: "Valor total das Entradas",
               data: [
-                100, 150, 120, 180, 200, 160, 180, 200, 220, 190, 170, 150,
+                "{{ lista[0]['jan'] }}", 
+                "{{ lista[0]['feb'] }}", 
+                "{{ lista[0]['mar'] }}", 
+                "{{ lista[0]['apr'] }}", 
+                "{{ lista[0]['may'] }}", 
+                "{{ lista[0]['jun'] }}", 
+                "{{ lista[0]['jul'] }}", 
+                "{{ lista[0]['aug'] }}", 
+                "{{ lista[0]['sep'] }}", 
+                "{{ lista[0]['oct'] }}", 
+                "{{ lista[0]['nov'] }}", 
+                "{{ lista[0]['dec'] }}",
               ],
               borderColor: "#17E3B9",
               borderWidth: 1,
@@ -278,8 +268,20 @@
               pointBackgroundColor: "#17E3B9"
             },
             {
-              label: "Valor total de Saídas",
-              data: [80, 100, 90, 120, 140, 110, 100, 130, 150, 120, 100, 90],
+              label: "Valor total das Saídas",
+              data: ["{{ lista[0]['jan'] }}", 
+                "{{ lista[1]['feb'] }}", 
+                "{{ lista[1]['mar'] }}", 
+                "{{ lista[1]['apr'] }}", 
+                "{{ lista[1]['may'] }}", 
+                "{{ lista[1]['jun'] }}", 
+                "{{ lista[1]['jul'] }}", 
+                "{{ lista[1]['aug'] }}", 
+                "{{ lista[1]['sep'] }}", 
+                "{{ lista[1]['oct'] }}", 
+                "{{ lista[1]['nov'] }}", 
+                "{{ lista[1]['dec'] }}",
+              ],
               borderColor: "#D822E3",
               borderWidth: 1,
               fill: false,
@@ -329,7 +331,7 @@
           labels: ["Entradas", "Outras"],
           datasets: [
             {
-              data: [131, 0],
+              data: ["{{total}}", 0],
               backgroundColor: ["#E32D40", "#D1D5DB"],
               borderColor: "#ffffff",
               borderWidth: 0,
@@ -358,11 +360,12 @@
         var ctx = document
           .getElementById("grafico-transacoes-entradas")
           .getContext("2d");
+
         var data = {
           labels: ["Entradas", "Outras"],
           datasets: [
             {
-              data: [94, 37],
+              data: ["{{ incomes }}", "{{ total }}" - "{{ incomes }}"],
               backgroundColor: ["#17E3B9", "#D1D5DB"],
               borderColor: "#ffffff",
               borderWidth: 0,
@@ -395,7 +398,7 @@
           labels: ["Entradas", "Outras"],
           datasets: [
             {
-              data: [29, 102],
+              data: ["{{ expenses }}", "{{ total }}" - "{{ expenses }}"],
               backgroundColor: ["#D822E3", "#D1D5DB"],
               borderColor: "#ffffff",
               borderWidth: 0,
@@ -428,7 +431,7 @@
           labels: ["Entradas", "Outras"],
           datasets: [
             {
-              data: [8, 123],
+              data: ["{{ budgets }}", "{{ total }}" - "{{ budgets }}"],
               backgroundColor: ["#87E344", "#D1D5DB"],
               borderColor: "#ffffff",
               borderWidth: 0,
