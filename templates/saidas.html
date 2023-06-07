@@ -148,10 +148,9 @@
         </div>
       </div>
       {% for message in get_flashed_messages() %}
-      <div class="alert alert-warning">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          {{ message }}
-      </div>
+        <div class="flex items-center justify-center bg-white bg-opacity-75 py-2 rounded-full w-72 mx-auto mt-6">
+          <p class="text-center text-gray-400">{{ message }}</p>
+        </div>
       {% endfor %}
 
       <div class="table w-full p-10">
