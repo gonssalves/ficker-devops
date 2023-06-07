@@ -13,7 +13,7 @@ class EditAccountForm(FlaskForm):
     email = StringField(validators=[InputRequired(message='Campo em branco')])
     password = PasswordField()
     password2 = PasswordField()
-    submit = SubmitField('Confirmar')
+    submit = SubmitField('Salvar')
 
 class SignupForm(FlaskForm):
     real_name = StringField('Nome Real', validators=[InputRequired(message='Campo em branco')])
