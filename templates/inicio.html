@@ -161,8 +161,10 @@
               
               {% if saldo < 0 %}
                 <p style="color: red;"> R$ {{ saldo }}</p>
-              {% else %}
+              {% elif saldo > 0 %}
                 <p style="color: green;"> R$ {{ saldo }}</p>
+              {% else %}
+                <p> R$ {{ saldo }}</p>
               {% endif %}
 
 
@@ -220,12 +222,11 @@
                 >Orçamento Real</label
               >
               <span id="orcamento_real" class="font-semibold text-xl text-gray-700" >               
-                {% set entrada_total = namespace(value=0) %}
-                {% for entrada in user.transacoes_entrada_u %}
-                  {% set entrada_total.value = entrada_total.value + entrada.val_entrada %}
-                {% endfor %}
-                
-                R$ {{ entrada_total.value }}
+                {% for orcamento in user.orcamentos_u %}
+                {% if orcamento.mes_orcamento == 'Junho' %}
+                  R$ {{ orcamento.val_orcamento_real }}
+                {% endif %}
+              {% endfor %}
               </span
               >
             </div>
@@ -245,23 +246,20 @@
             </a>
           </div>
         </div>
-          {% for transacao in user.transacoes_cofrinho_u %}
-          <div class="flex justify-between items-center w-full text-semibold pb-2">
-            <div class="flex items-center justify-center">
-              <div class="w-3 h-3 rounded rounded-full mr-3" style="background-color: {{ transacao.objetivo.cor_objetivo|safe }};"></div>
+          {% for objetivo in user.piggies() %}
+            <div class="flex justify-between items-center w-full text-semibold pb-2">
+              <div class="flex items-center justify-center">
+                <div class="w-3 h-3 rounded rounded-full mr-3" style="background-color: {{ objetivo.color|safe }};"></div>
 
-              <p class="text-sm">{{ transacao.objetivo.nom_objetivo }}</p>
+                <p class="text-sm">{{ objetivo.name }}</p>
+              </div>
+              <div>
+                <p class="text-gray-400 text-sm">R$ {{objetivo.value}}</p>
+              </div>
+              
             </div>
-            <div>
-              <p class="text-gray-400 text-sm">R$ {{transacao.val_cofrinho}}</p>
-            </div>
-            
-          </div>
-
           {% endfor %}
-
-
-
+        
         </div>
         </div>
       </div>
@@ -423,11 +421,10 @@
         $("#mostrar_saldo").click(function () {
           
           saldo = "{{ saldo }}"
-          if (saldo > 0) {
-            $("#saldo").text("R$" + " " + saldo).css("color", "green"); // Define a cor do texto como verde
-          } else {
-            $("#saldo").text("R$" + " " + saldo).css("color", "red"); // Define a cor do texto como vermelho
-          }
+
+          if (saldo < 0) { $("#saldo").text("R$" + " " + saldo).css("color", "red"); }
+          else if (saldo > 0) {$("#saldo").text("R$" + " " + saldo).css("color", "green"); }
+          else{ $("#saldo").text("R$" + " " + saldo).css("color", "black"); }
 
           $("#ocultar_saldo").show();
           $("#mostrar_saldo").hide();
