@@ -24,11 +24,11 @@ def auth_login():
     req.pop('submit')
 
     if not user:
-        flash('Email inválido')
+        flash('Email ou senha inválido')
         return redirect(url_for('auth.login', **req))#**req é usado para enviar a requisição de volta para o formulário, assim o usuário não precisa digitar tudo de novo
     
     if not user.verify_password(password) or password == user.sen_usuario:
-        flash('Senha inválida')
+        flash('Email ou senha inválido')
         return redirect(url_for('auth.login', **req))
         
     login_user(user, remember=remember_me)#uma vez que o usuário é autenticado, ele é logado com essa função | remember-me mantém o usuário logado apos o navegador ser fechado
@@ -136,6 +136,9 @@ def auth_signup():
         flash('Não foi possível cadastrar-se, por favor tente mais tarde')
         return redirect(url_for('auth.signup', **req))
     
+    from models.general import create_budget
+    create_budget(new_user)
+
     flash('Você se cadastrou, já pode entrar em sua conta')
     return redirect(url_for('auth.login'))
 
