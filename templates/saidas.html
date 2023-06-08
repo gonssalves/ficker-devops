@@ -131,6 +131,11 @@
     <main class="ml-64">
       <div class="flex flex-row justify-between p-6">
         <h1 class="text-xl font-semibold mb-4">Saídas</h1>
+        {% for message in get_flashed_messages() %}
+        <div class="flex items-center justify-center bg-white bg-opacity-75 py-2 rounded-full w-72 mx-auto mt-6">
+          <p class="text-center text-gray-400">{{ message }}</p>
+        </div>
+      {% endfor %}
         <div class="flex">
           <form class="flex mr-4">
             <input
@@ -147,11 +152,7 @@
           </button>
         </div>
       </div>
-      {% for message in get_flashed_messages() %}
-        <div class="flex items-center justify-center bg-white bg-opacity-75 py-2 rounded-full w-72 mx-auto mt-6">
-          <p class="text-center text-gray-400">{{ message }}</p>
-        </div>
-      {% endfor %}
+     
 
       <div class="table w-full p-10">
         <div class="">
@@ -159,23 +160,27 @@
             class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-2"
           >
             <div
-              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/3"
+              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5"
             >
               Editar
             </div>
             <div
-              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/3"
+              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5"
             >
               Descrição
             </div>
             <div
-              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/3"
+              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5"
             >
               Data
             </div>
-
             <div
-              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 md:w-1/3"
+            class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 mr-2 md:w-1/5"
+          >
+            Categoria
+          </div>
+            <div
+              class="rounded-lg bg-gray-50 shadow-sm shadow-gray-300 p-3 md:w-1/5"
             >
               Valor
             </div>
@@ -183,18 +188,21 @@
 
           {% for transacao in user.transacoes_saida_u %}
           <div class="flex flex-col md:flex-row items-center justify-center md:justify-between mb-1 text-gray-500">
-            <div class="rounded-lg bg-white p-1 mr-2 md:w-1/3">
+            <div class="rounded-lg bg-white p-1 mr-2 md:w-1/5">
               <a class="open_edit open-edit-button rounded rounded-full w-full" data-expense-id ="{{ transacao.id }}">
                 <img src="../static/assets/img/icons/icon-editar.svg" alt="editar" class="mx-auto my-auto p-3 hover:bg-gray-100 rounded rounded-lg"/>
               </a>              
             </div>
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/3">
+            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
               {{ transacao.dsc_saida }}
             </div>
-            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/3">
+            <div class="rounded-lg bg-white p-3 mr-2 md:w-1/5">
               {{ transacao.dat_saida }}
             </div>
-            <div class="rounded-lg bg-white p-3 md:w-1/3">
+            <div class="rounded-lg bg-white p-3 md:w-1/5">
+              {{ transacao.get_categoria_nome() }}
+            </div>
+            <div class="rounded-lg bg-white p-3 md:w-1/5">
               <p style="color:red;">R$ {{ transacao.val_saida }}</p>
             </div>
           </div>
@@ -202,24 +210,107 @@
         </div>
       </div>
     </main>
-
     <div
-    class="form_add fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  >
-    <div class="bg-white rounded rounded-lg p-4 w-1/3">
-      <h2 class="text-lg font-semibold mb-6">Nova Entrada</h2>
-      <form method="POST" action="{{ url_for('main.expenses') }}">
-        {{ form.csrf_token }}
+      class="form_add fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded rounded-lg p-4 w-1/3">
+        <h2 class="text-lg font-semibold mb-6">Nova Saída</h2>
+        <form method="POST" action="{{ url_for('main.expenses') }}">
+          {{ form.csrf_token }}
+
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1 text-left" for="descricao">
+              Descrição
+            </label>
+
+            
+            {{ form.description(
+              type="text",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+              id="descricao") }}
+            
+          </div>
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 mb-1 text-left"
+              for="data_transacao"
+            >
+              Data
+            </label>
+            {{form.date(
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+              id="data_transacao" )}}
+            
+          </div>
+          <div class="mb-4 flex justify-between">
+            <div class="w-1/2 mr-2">
+              <label class="block text-gray-700 mb-1 text-left" for="categoria">
+                Categoria
+              </label>
+              <select
+                class="categoria rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+               name="selected_option"
+              >
+                <option disabled selected>Selecione</option>
+                <option value="nova">Nova</option>
+                {% for categoria in user.categorias_u %}
+                    <option value="{{ categoria.dsc_categoria }}">{{ categoria.dsc_categoria }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="nova_categoria">
+              <label
+                class="block text-gray-700 mb-1 text-left"
+                for="descricao_categoria"
+              >
+                Descrição da Categoria
+              </label>
+              {{ form.new_category(
+                type="text",
+                class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+                id="descricao_categoria" )}}
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-1 text-left" for="valor">
+              Valor
+            </label>
+            {{ form.value (
+              step="0.01",
+              placeholder="R$",
+              class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+              id="valor" )}}
+          </div>
+          <div class="mb-4 flex justify-left">
+            {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+          
+            <input
+              type="reset" value="Cancelar"
+              class="close_add bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
+            >
         
+            
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="form_edit fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded rounded-lg p-4 w-1/3">
+        <h2 class="text-lg font-semibold mb-6">Editar Saída</h2>
         <div class="mb-4">
           <label class="block text-gray-700 mb-1 text-left" for="descricao">
+          <form method="POST" action="{{ url_for('main.edit_expenses') }}">
+
+            {{ form.csrf_token }}
+            {{ form.idd(type="text", class = "hidden") }}
+            
             Descrição
           </label>
           {{ form.description(
             type="text",
             class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
             id="descricao") }}
-          
         </div>
         <div class="mb-4">
           <label
@@ -228,153 +319,143 @@
           >
             Data
           </label>
-          {{form.date(
+          {{ form.date (
             class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
             id="data_transacao" )}}
-          
         </div>
-      
+         <div class="mb-4 flex justify-between">
+            <div class="w-1/2 mr-2">
+              <label class="block text-gray-700 mb-1 text-left" for="categoria">
+                Categoria
+              </label>
+              <select
+                class="categoria rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline"
+                 name="selected_option"
+              >
+                <option disabled selected>Selecione</option>
+                <option value="nova">Nova</option>
+                {% for categoria in user.categorias_u %}
+                    <option value="{{ categoria.dsc_categoria }}">{{ categoria.dsc_categoria }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="nova_categoria">
+              <label
+                class="block text-gray-700 mb-1 text-left"
+                for="descricao_categoria"
+              >
+                Descrição da Categoria
+              </label>
+              {{ form.new_category(
+                type="text",
+                class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
+                id="descricao_categoria" )}}
+            </div>
+          </div>
         <div class="mb-4">
           <label class="block text-gray-700 mb-1 text-left" for="valor">
             Valor
           </label>
-          {{ form.value (
+          {{form.value (
+            type="number",
             step="0.01",
             placeholder="R$",
             class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
             id="valor" )}}
         </div>
-        <div class="mb-4 flex justify-left">
-          {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
         
-          <input
+        <div class="mb-4 flex justify-between">
+          <div class="flex justify-left">
+            {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
+
+            <input
             type="reset" value="Cancelar"
-            class="close_add bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
+            class="close_edit bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
           >
+          </div>
+          
+          </form>
+
+          <div class="my-auto rounded rounded-full hover:bg-gray-100 p-3">
+            <button id="deleteButton">
+              <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
+            </button>  
+          </div> 
+
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
-
-
-  <div class="form_edit fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded rounded-lg p-4 w-1/3">
-      <h2 class="text-lg font-semibold mb-6">Editar Saída</h2>
-      <div class="mb-4">
-        <label class="block text-gray-700 mb-1 text-left" for="descricao">
-        <form method="POST" action="{{ url_for('main.edit_expenses') }}">
-          {{ form.csrf_token }}
-          {{ form.idd(type="text", class = "hidden") }}
-
-
-          Descrição
-        </label>
-        {{ form.description(
-          type="text",
-          class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
-          id="descricao") }}
-      </div>
-      <div class="mb-4">
-        <label
-          class="block text-gray-700 mb-1 text-left"
-          for="data_transacao"
-        >
-          Data
-        </label>
-        {{ form.date (
-          class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
-          id="data_transacao" )}}
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 mb-1 text-left" for="valor">
-          Valor
-        </label>
-        {{form.value (
-          type="number",
-          step="0.01",
-          placeholder="R$",
-          class="appearance-none rounded w-full py-3 px-3 bg-gray-100 text-gray-700 shadow-sm rounded-lg leading-tight focus:outline-none focus:shadow-outline",
-          id="valor" )}}
       </div>
 
-      <div class="mb-4 flex justify-between">
-        <div class="flex justify-left">
-          {{ form.submit(class="bg-red-500 hover:bg-red-600 text-white font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline") }}
-          <input
-          type="reset" value="Cancelar"
-          class="close_edit bg-gray-100 hover:bg-gray-200 text-red-500 font-regular py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-3"
-        >
-        </div>
+     <script>
+      $(document).ready(function() {
+      // Manipulador de eventos de clique para o botão de edição
+      $(".open_edit").click(function() {
+        // Obtém o ID da entrada a partir do atributo de dados
+        var expenseId = $(this).data("expense-id");
         
-      </form>
-      
-      <div class="my-auto rounded rounded-full hover:bg-gray-100 p-3">
-        <button id="deleteButton">
-          <img src="../static/assets/img/icons/icon-delete.svg" alt="logo" />
-        </button>  
-      </div> 
-      
-    </div>
-      </div>
-    </div>
+        // Encontre a entrada correspondente nos dados do usuário
+        "{% for transacao in user.transacoes_saida_u %}"
+          var expense_id = "{{ transacao.id }}";
+          if(expense_id == expenseId){
+            $(".form_edit input[name='idd']").val("{{ transacao.id }}");
+            $(".form_edit input[name='description']").val("{{ transacao.dsc_saida }}");
+            $(".form_edit input[name='date']").val("{{ transacao.dat_saida }}");
+            $(".form_edit select[name='selected_option']").val("{{ transacao.get_categoria_nome() }}");
+            $(".form_edit input[name='value']").val("{{ transacao.val_saida }}");
+          }
+        "{% endfor %}"
 
-  <script>
-    $(document).ready(function() {
-    // Manipulador de eventos de clique para o botão de edição
-    $(".open_edit").click(function() {
-      // Obtém o ID da entrada a partir do atributo de dados
-      var expenseId = $(this).data("expense-id");
-
-      // Encontre a entrada correspondente nos dados do usuário
-      "{% for transacao in user.transacoes_saida_u %}"
-        expense_id = "{{ transacao.id }}"
-        if(expenseId == expense_id){
-          $(".form_edit input[name='idd']").val("{{ transacao.id }}");
-          $(".form_edit input[name='description']").val("{{ transacao.dsc_saida }}");
-          $(".form_edit input[name='date']").val("{{ transacao.dat_saida }}");
-          $(".form_edit input[name='value']").val("{{ transacao.val_saida }}");
-        }
-      "{% endfor %}"
-
-            
-      // Exiba o formulário de edição
-      $(".form_edit").fadeIn();
-    });
-    });
-
-    $(document).ready(function () {
-      $(".form_add").hide();
-      $(".form_edit").hide();
-
-      //Formulario de adicionar
-      $(".open_add").click(function () {
-        $(".form_add").fadeIn();
+        // Exiba o formulário de edição
+        $(".form_edit").fadeIn();
+      });
       });
 
-      $(".close_add").click(function () {
-        $(".form_add").fadeOut();
+      $(document).ready(function () {
+        $(".form_add").hide();
+        $(".form_edit").hide();
+
+        //Formulario de adicionar
+        $(".open_add").click(function () {
+          $(".form_add").fadeIn();
+        });
+
+        $(".close_add").click(function () {
+          $(".form_add").fadeOut();
+        });
+
+        $(".close_edit").click(function () {
+          $(".form_edit").fadeOut();
+        });
+
+        //Nova Categoria
+        $(".nova_categoria").hide();
+
+        $(".categoria").change(function () {
+          // Verifica se o valor selecionado é "novo"
+          if ($(this).val() === "nova") {
+            // Mostra a div "nova_categoria"
+            $(".nova_categoria").show();
+          } else {
+            // Oculta a div "nova_categoria"
+            $(".nova_categoria").hide();
+          }
+        });
       });
 
-      $(".close_edit").click(function () {
-        $(".form_edit").fadeOut();
+      $(document).ready(function() {
+      $('.open_edit').on('click', function(event) {
+        var button = $(this);
+        var expenseId = button.data('expense-id');
+        $('#deleteButton').data('expense-id', expenseId);
       });
-     
-    });
 
-    $(document).ready(function() {
-    $('.open_edit').on('click', function(event) {
-      var button = $(this);
-      var expenseId = button.data('expense-id');
-      $('#deleteButton').data('expense-id', expenseId);
-    
+      $('#deleteButton').click(function() {
+        var expenseId = $(this).data('expense-id');
+        window.location.href = 'expenses/' + expenseId + '/delete';
+      });
     });
-
-    $('#deleteButton').click(function() {
-      var expenseId = $(this).data('expense-id');
-      window.location.href = 'expenses/' + expenseId + '/delete';
-    });
-  });
-  </script>
+    </script>
 </body>
 </html>
           

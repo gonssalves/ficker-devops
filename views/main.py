@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
 @main.route('/', methods=['GET'])
 def index():
+    if '_user_id' in session:
+         return redirect(url_for('main.home'))
     return render_template('index.html')
 
 @main.route('/home', methods=['GET', 'POST', 'PUT'])
@@ -27,8 +29,8 @@ def home_edit_budget():
 @main.route('/incomes', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def incomes():
-    from forms import IncomeForm
-    form = IncomeForm()
+    from forms import TransactionForm
+    form = TransactionForm()
     if form.validate_on_submit():
         from models.general import add_income
         return add_income()
@@ -48,14 +50,14 @@ def delete_incomes(income_id):
 
         income = TransacaoEntrada.show_one(income_id)
 
-        from models.general import delete_income
-        return delete_income(income)
+        from models.general import delete_transaction
+        return delete_transaction(income, 'entrada', 'incomes')
 
 @main.route('/expenses', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @login_required
 def expenses():
-    from forms import IncomeForm
-    form = IncomeForm()
+    from forms import TransactionForm
+    form = TransactionForm()
     if form.validate_on_submit():
         from models.general import add_expense
         return add_expense()
@@ -74,8 +76,8 @@ def delete_expenses(expense_id):
         from models.entities import TransacaoSaida
         expense = TransacaoSaida.show_one(expense_id)
 
-        from models.general import delete_expense
-        return delete_expense(expense)
+        from models.general import delete_transaction
+        return delete_transaction(expense, 'saída', 'expenses')
 
 @main.route('/piggy-bank', methods=['GET', 'POST'])
 @login_required
@@ -87,7 +89,7 @@ def piggy():
         return add_piggy()
     return render_template('cofrinho.html', user=current_user, form=form)
 
-@main.route('/piggy-bank/edit', methods=['GET'])
+@main.route('/piggy-bank/edit', methods=['GET', 'POST'])
 @login_required
 def edit_piggy():
     from models.general import edit_piggy
@@ -100,8 +102,8 @@ def delete_piggy(piggy_id):
         from models.entities import TransacaoCofrinho
         piggy = TransacaoCofrinho.show_one(piggy_id)
 
-        from models.general import delete_piggy
-        return delete_piggy(piggy)
+        from models.general import delete_transaction
+        return delete_transaction(piggy, 'transação do cofrinho', 'piggy')
 
 @main.route('/analyzes', methods=['GET'])
 @login_required
@@ -113,7 +115,10 @@ def analyzes():
     most_recents = Usuario.most_recents(current_user)
 
     lista =  Usuario.monthly(current_user)
-
+    print(lista)
+    if lista == 'no transactions':
+         return render_template('analises_vazio.html', user=current_user)
+    
     return render_template('analises.html', user=current_user, incomes=total['entrada'], expenses=total['saida'], budgets=total['cofrinho'], total=total['total'], most_recents=most_recents, lista=lista)
 
 @main.route('/profile', methods=['GET', 'POST'])
