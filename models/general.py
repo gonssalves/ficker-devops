@@ -63,7 +63,9 @@ def edit_income():
     except:
         flash('Não foi possível alterar a entrada, por favor tente mais tarde')
         return redirect(url_for('main.incomes'))
-        
+    
+    update_budget()
+    
     flash('Entrada alterada')
     return redirect(url_for('main.incomes'))
 
@@ -309,6 +311,8 @@ def delete_transaction(transaction, tipo, retorno):
     except:
         flash(f'Não foi possível excluir a {tipo}, por favor tente mais tarde')
         return redirect(url_for(f'main.{retorno}'))
+    
+    update_budget()
     
     flash(f'{tipo.capitalize()} excluída')
     return redirect(url_for(f'main.{retorno}'))
