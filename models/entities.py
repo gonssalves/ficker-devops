@@ -24,13 +24,18 @@ class Usuario(db.Model, UserMixin):
     def verify_password(self, password):
         return bcrypt.check_password_hash(self.sen_usuario, password)
     
+    @staticmethod
     def show_all():
         return Usuario.query.all()
     
     def monthly(self):
+        lista = []
 
-        income_jan = 0
-        income_feb = 0
+        if len(self.transacoes_entrada_u) == 0 or len(self.transacoes_saida_u) == 0:
+            return 'no transactions'
+        
+        income_jan = 0 
+        income_feb = 0 
         income_mar = 0
         income_apr = 0
         income_may = 0
@@ -84,9 +89,9 @@ class Usuario(db.Model, UserMixin):
             
             dicio_incomes = {'jan': income_jan,"feb": income_feb, "mar": income_mar, "apr": income_apr, "may": income_may,"jun": income_jun,"jul": income_jul,"aug": income_aug,"sep": income_sep,"oct": income_oct,"nov": income_nov,"dec": income_dec}
             dicio_expenses = {'jan': expense_jan,"feb": expense_feb, "mar": expense_mar, "apr": expense_apr, "may": expense_may,"jun": expense_jun,"jul": expense_jul,"aug": expense_aug,"sep": expense_sep,"oct": expense_oct,"nov": expense_nov,"dec": expense_dec}
-            
+        
             lista = [dicio_incomes, dicio_expenses]
-
+        
         return lista
     
     def total(self):
@@ -129,6 +134,24 @@ class Usuario(db.Model, UserMixin):
 
         return most_recents
 
+    def piggies(self):
+        l = []
+    
+        for objetivo in self.objetivos_u:
+            total = 0
+            for transacao in self.transacoes_cofrinho_u: 
+                if objetivo.id == transacao.cod_objetivo:
+                    if transacao.tip_transacao == 'Guardar':
+                        total += transacao.val_cofrinho
+                        dicio = {'name': objetivo.nom_objetivo, 'value': total, 'color': objetivo.cor_objetivo}
+                    else:
+                        total -= transacao.val_cofrinho
+                        dicio = {'name': objetivo.nom_objetivo, 'value': total, 'color': objetivo.cor_objetivo}
+            l.append(dicio)
+               
+        return l
+                
+             
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'
     id = db.Column(db.Integer, primary_key=True)
@@ -143,10 +166,7 @@ class TransacaoEntrada(db.Model):
     dsc_entrada = db.Column(db.String(64), nullable=False)
     dat_entrada = db.Column(db.Date(), nullable=False)
     val_entrada = db.Column(db.Float(64))
-    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
-    cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
-    
-    categoria_nome = db.relationship('Categoria', backref='transacoes_entrada', lazy=True, viewonly=True)
+    cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))    
 
     # def __repr__(self):
     #     return f'<Transação Entrada: {self.dsc_entrada} | Data: {self.dat_entrada} | Valor: {self.val_entrada}>'
@@ -157,12 +177,6 @@ class TransacaoEntrada(db.Model):
     def show_one(income_id):
         return TransacaoEntrada.query.get(int(income_id))
 
-    def get_categoria_nome(self):
-        if self.categoria_nome is not None:
-            return str(self.categoria_nome.dsc_categoria)
-        else:
-            return 'Sem categoria'
-
 class TransacaoSaida(db.Model):
     __tablename__ = 'transacoes_saida'
     id = db.Column(db.Integer, primary_key=True)
@@ -170,12 +184,26 @@ class TransacaoSaida(db.Model):
     dat_saida = db.Column(db.Date(), nullable=False)
     val_saida = db.Column(db.Float(64))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
+    cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
+    
+    categoria_nome = db.relationship('Categoria', backref='transacoes_saida', lazy=True, viewonly=True)
 
     # def __repr__(self):
     #     return f'<Transação Saída: {self.dsc_saida} | Data: {self.dat_saida} | Valor: {self.val_saida}>'
 
+    @staticmethod
     def show_one(expense_id):
         return TransacaoSaida.query.get(int(expense_id))
+    
+    @staticmethod
+    def show_all():
+        return TransacaoEntrada.query.all()
+    
+    def get_categoria_nome(self):
+        if self.categoria_nome is not None:
+            return str(self.categoria_nome.dsc_categoria)
+        else:
+            return 'Sem categoria'
 
 class Categoria(db.Model):
     __tablename__ = 'categorias'
@@ -183,7 +211,7 @@ class Categoria(db.Model):
     dsc_categoria = db.Column(db.String(64), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
 
-    transacoes_entrada_c = db.relationship('TransacaoEntrada', backref='categoria', lazy=True)
+    transacoes_saida_c = db.relationship('TransacaoSaida', backref='categoria', lazy=True)
 
     def __repr__(self):
         return f'<Categoria: {self.dsc_categoria}>'
@@ -209,6 +237,7 @@ class TransacaoCofrinho(db.Model):
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_objetivo = db.Column(db.Integer, db.ForeignKey('objetivos.id'))
 
+    @staticmethod
     def show_one(budget_id):
         return TransacaoCofrinho.query.get(int(budget_id))
     
