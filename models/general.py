@@ -25,8 +25,6 @@ def add_income():
         flash('Não foi possível cadastrar sua entrada, por favor tente mais tarde')
         return redirect(url_for('main.incomes'))
 
-    update_budget()
-
     flash('Entrada cadastrada com sucesso')
     return redirect(url_for('main.incomes'))
 
@@ -63,8 +61,6 @@ def edit_income():
     except:
         flash('Não foi possível alterar a entrada, por favor tente mais tarde')
         return redirect(url_for('main.incomes'))
-    
-    update_budget()
     
     flash('Entrada alterada')
     return redirect(url_for('main.incomes'))
@@ -109,7 +105,8 @@ def add_expense():
         except:
             flash('Não foi possível cadastrar sua saida, por favor tente mais tarde')
             return redirect(url_for('main.expenses'))
-        
+    
+    update_budget()
     flash('Saída cadastrada com sucesso')
     return redirect(url_for('main.expenses'))
 
@@ -174,7 +171,7 @@ def edit_expense():
         except:
             flash('Não foi possível alterar a saída, por favor tente mais tarde')
             return redirect(url_for('main.expenses'))
-    
+    update_budget()
     flash('Saída alterada')
     return redirect(url_for('main.expenses'))
 
@@ -313,7 +310,6 @@ def delete_transaction(transaction, tipo, retorno):
         return redirect(url_for(f'main.{retorno}'))
     
     update_budget()
-    
     flash(f'{tipo.capitalize()} excluída')
     return redirect(url_for(f'main.{retorno}'))
 
@@ -334,8 +330,8 @@ def update_budget():
     
     entrada_total = 0
 
-    for entrada in user.transacoes_entrada_u:
-            entrada_total += entrada.val_entrada
+    for entrada in user.transacoes_saida_u:
+            entrada_total += entrada.val_saida
 
     for orcamento in user.orcamentos_u:
         if orcamento.mes_orcamento == 'Junho':
