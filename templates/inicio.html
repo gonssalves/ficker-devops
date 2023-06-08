@@ -224,7 +224,8 @@
               <span id="orcamento_real" class="font-semibold text-xl text-gray-700" >               
                 {% for orcamento in user.orcamentos_u %}
                 {% if orcamento.mes_orcamento == 'Junho' %}
-                  R$ {{ orcamento.val_orcamento_real }}
+                  
+                <p style="color: red;"> R$ -{{ orcamento.val_orcamento_real }}</p>
                 {% endif %}
               {% endfor %}
               </span
