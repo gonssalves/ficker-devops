@@ -3,24 +3,24 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, DateF
 from wtforms.validators import InputRequired, Length, Regexp
 
 class LoginForm(FlaskForm):
-    email = StringField(validators=[InputRequired(message='Campo em branco')])
-    password = PasswordField('Senha', validators=[InputRequired(), Length(8, message='Senha precisa ter ao menos 8 caracteres')])
+    email = StringField(validators=[InputRequired()])
+    password = PasswordField('Senha', validators=[InputRequired()])
     remember_me = BooleanField('Me mantenha conectado')
     submit = SubmitField('Entrar')
 
 class EditAccountForm(FlaskForm):
-    name = StringField(validators=[InputRequired(message='Campo em branco')])
-    email = StringField(validators=[InputRequired(message='Campo em branco')])
+    name = StringField(validators=[InputRequired()])
+    email = StringField(validators=[InputRequired()])
     password = PasswordField()
     password2 = PasswordField()
     submit = SubmitField('Salvar')
 
 class SignupForm(FlaskForm):
-    real_name = StringField('Nome Real', validators=[InputRequired(message='Campo em branco')])
+    real_name = StringField('Nome Real', validators=[InputRequired()])
     username = StringField(
         validators=[
             InputRequired(), 
-            Length(3, message="Nome de usuário precisa ter ao menos 3 caracteres"), 
+            Length(3), 
             Regexp( 
                 "^[A-Za-z][A-Za-z0-9_.]*$", 
                 0, 
@@ -28,20 +28,20 @@ class SignupForm(FlaskForm):
             )
         ]
     )
-    email = StringField(validators=[InputRequired(message='Campo em branco')])
-    password = PasswordField('Senha', validators=[InputRequired(), Length(8, message='Senha precisa ter ao menos 8 caracteres')])
-    password2 = PasswordField('Repita a senha', validators=[InputRequired(message='Campo em branco')])
+    email = StringField(validators=[InputRequired()])
+    password = PasswordField('Senha', validators=[InputRequired(), Length(8)])
+    password2 = PasswordField('Repita a senha', validators=[InputRequired()])
     submit = SubmitField('Cadastrar-se')
 
 class RecoveryForm(FlaskForm):
-    email = StringField(validators=[InputRequired(message='Campo em branco')])
+    email = StringField(validators=[InputRequired()])
     submit = SubmitField('Enviar')
 
-class IncomeForm(FlaskForm):
-    description = StringField('Descrição', validators=[InputRequired(message='Campo em branco')])
-    date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
+class TransactionForm(FlaskForm):
+    description = StringField('Descrição', validators=[InputRequired()])
+    date = DateField('Data', validators=[InputRequired()])
     new_category = StringField('Categoria')
-    value = FloatField('Valor', validators=[InputRequired(message='Campo em branco')])
+    value = FloatField('Valor', validators=[InputRequired()])
     submit = SubmitField('Adicionar')
     idd = StringField()
 
@@ -49,8 +49,8 @@ class PiggyForm(FlaskForm):
     description = StringField('Descrição')
     color = StringField('Cor')
     action = StringField('Ação')
-    date = DateField('Data', validators=[InputRequired(message='Campo em branco')])
-    value = FloatField('Valor', validators=[InputRequired(message='Campo em branco')])
+    date = DateField('Data', validators=[InputRequired()])
+    value = FloatField('Valor', validators=[InputRequired()])
     submit = SubmitField('Adicionar')
     idd = StringField()
 
