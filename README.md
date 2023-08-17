@@ -7,3 +7,5 @@ You should have Python and virtual environment (preferentially) on your machine.
 * While inside the venv, to run the server, use <em>flask --app app run --debug</em> or <em>export FLASK_APP=app</em> and then <em>flask run</em>.
 
 Additionally, you can find our app URL in the 'about' section. Please be patient, though, as the service spins down due to inactivity, so it might take a while to load.
+
+Feel free to contribute :)
