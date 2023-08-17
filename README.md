@@ -1,5 +1,4 @@
 # Personal Finance Tracker - Ficker
-#### A web-based system that allows users to register and track their income and expenses, create budgets and generate reports on their spending patterns and trends.
 
 ## Configuration
 You should have Python and virtual environment (preferentially) on your machine.
