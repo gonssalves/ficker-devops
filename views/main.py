@@ -3,6 +3,11 @@ from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
+# @main.route("/")
+# def hello_world():
+#     1/0  # raises an error
+#     return "<p>Hello, World!</p>"
+
 @main.route('/', methods=['GET'])
 def index():
     if '_user_id' in session:
