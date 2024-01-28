@@ -1,11 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mailing import Mail
 from views.main import main as view_main
 from views.auth import auth as view_auth
 import os
+import sentry_sdk
 
 #caminho relativo
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -26,8 +28,21 @@ app.config['MAIL_PASSWORD'] = EMAIL_PASSWORD
 app.config['MAIL_TLS'] = True
 app.config['MAIL_SSL'] = False
 
-#cria extensões
+# configuração do sentry
+sentry_sdk.init(
+    dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+#cria instâncias
 db = SQLAlchemy(app)
+
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 mail = Mail(app)
