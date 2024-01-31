@@ -6,25 +6,27 @@ from flask_login import LoginManager
 from flask_mailing import Mail
 from views.main import main as view_main
 from views.auth import auth as view_auth
-import os
-import sentry_sdk
+from dotenv import load_dotenv
+import os, sentry_sdk
 
 #caminho relativo
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-from secret import SECRET_KEY, EMAIL_SENDER, EMAIL_PASSWORD
+#carrega variáveis de ambiente do arquivo .env
+load_dotenv()
 
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
 #configura o SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = EMAIL_SENDER
-app.config['MAIL_PASSWORD'] = EMAIL_PASSWORD
+app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_SENDER')
+app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
 app.config['MAIL_TLS'] = True
 app.config['MAIL_SSL'] = False
 
