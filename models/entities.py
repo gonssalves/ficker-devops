@@ -1,4 +1,12 @@
+import os
+import sys
+
+script_dir = os.path.dirname( __file__ )
+mymodule_dir = os.path.join( script_dir, '..')
+sys.path.append( mymodule_dir)
+
 from app import db, bcrypt
+
 from flask_login import UserMixin
 
 #criação das tabelas
