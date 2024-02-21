@@ -8,6 +8,7 @@ from views.main import main as view_main
 from views.auth import auth as view_auth
 from dotenv import load_dotenv
 import os, sentry_sdk
+from gevent.pywsgi import WSGIServer
 
 #caminho relativo
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -64,3 +65,10 @@ def load_user(user_id):
 #registra o blueprint (blueprints lidam com as rotas)
 app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
+
+if __name__ == '__main__':
+    # Debug/Development
+    # app.run(debug=True, host="0.0.0.0", port="5000")
+    # Production
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
