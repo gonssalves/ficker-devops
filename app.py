@@ -30,7 +30,7 @@ app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
 app.config['MAIL_TLS'] = True
 app.config['MAIL_SSL'] = False
 
-# configuração do sentry
+#configuração do sentry
 sentry_sdk.init(
     dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
     # Set traces_sample_rate to 1.0 to capture 100%
@@ -42,12 +42,14 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-#cria instâncias
+#cria extensões
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 mail = Mail(app)
+
+from models.entities import *
 
 #define a view responsável por login e ajuda a previnir o roubo da sessão do usuário
 login_manager.login_view = 'auth.login'
