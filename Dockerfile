@@ -1,13 +1,15 @@
 FROM python:3.10.12-slim
 
+# Define o diretório de trabalho
 WORKDIR /app
 
+# Copia todos os arquivos do diretório atual para o contêiner
 COPY . /app
 
-RUN pip install -r requirements
+# Instala as dependências do Flask, se houver
+RUN pip install -r requirements.txt
 
-EXPOSE 80
+EXPOSE 8080
 
-ENV NAME flask
-
-CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+# Define o comando para executar o arquivo app.py
+CMD ["python", "app.py"]
