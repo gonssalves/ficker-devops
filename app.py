@@ -8,42 +8,46 @@ from views.main import main as view_main
 from views.auth import auth as view_auth
 from dotenv import load_dotenv
 import os, sentry_sdk
-from gevent.pywsgi import WSGIServer
 
-#caminho relativo
-basedir = os.path.abspath(os.path.dirname(__file__))
+# Função para criar o aplicativo Flask
+def create_app():
+    app = Flask(__name__)
 
-app = Flask(__name__)
+    # Carrega variáveis de ambiente do arquivo .env
+    load_dotenv()
 
-#carrega variáveis de ambiente do arquivo .env
-load_dotenv()
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    # Configura o SQLite
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') + os.path.join(basedir, 'data.sqlite')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    
 
-#configura o SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') + os.path.join(basedir, 'data.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    
+    app.config['MAIL_SERVER']='smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_SENDER')
+    app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
+    app.config['MAIL_TLS'] = True
+    app.config['MAIL_SSL'] = False
 
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_SENDER')
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
-app.config['MAIL_TLS'] = True
-app.config['MAIL_SSL'] = False
+    # Configuração do sentry
+    sentry_sdk.init(
+        dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
 
-#configuração do sentry
-sentry_sdk.init(
-    dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
-)
+    return app
 
-#cria extensões
+# Cria o aplicativo Flask
+app = create_app()
+
+# Cria a instância do SQLAlchemy
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
@@ -67,8 +71,6 @@ app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
 
 if __name__ == '__main__':
-    # Debug/Development
-    # app.run(debug=True, host="0.0.0.0", port="5000")
-    # Production
-    http_server = WSGIServer(('', 5000), app)
-    http_server.serve_forever()
+    # Executa o aplicativo Flask usando o Gunicorn para produção
+    import os
+    os.system('gunicorn -b 0.0.0.0:8080 app:app')
