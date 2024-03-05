@@ -4,10 +4,10 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install -r requirements
+RUN pip install -r requirements.txt
 
-EXPOSE 80
+EXPOSE 8080
 
 ENV NAME flask
 
-CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+CMD exec gunicorn --bind :8080 app:app
