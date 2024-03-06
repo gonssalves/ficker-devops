@@ -20,7 +20,7 @@ def create_app():
 
     # Configura o SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') + os.path.join(basedir, 'data.sqlite')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    
 
     app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -31,16 +31,16 @@ def create_app():
     app.config['MAIL_SSL'] = False
 
     # Configuração do sentry
-    sentry_sdk.init(
-        dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        traces_sample_rate=1.0,
-        # Set profiles_sample_rate to 1.0 to profile 100%
-        # of sampled transactions.
-        # We recommend adjusting this value in production.
-        profiles_sample_rate=1.0,
-    )
+    # sentry_sdk.init(
+    #     dsn="https://307d0e84cf2281bab01212d9862c73b1@o4506650077822976.ingest.sentry.io/4506650093813760",
+    #     # Set traces_sample_rate to 1.0 to capture 100%
+    #     # of transactions for performance monitoring.
+    #     traces_sample_rate=1.0,
+    #     # Set profiles_sample_rate to 1.0 to profile 100%
+    #     # of sampled transactions.
+    #     # We recommend adjusting this value in production.
+    #     profiles_sample_rate=1.0,
+    # )
 
     return app
 

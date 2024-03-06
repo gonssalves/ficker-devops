@@ -163,8 +163,8 @@ class Usuario(db.Model, UserMixin):
 class Orcamento(db.Model):
     __tablename__ = 'orcamentos'
     id = db.Column(db.Integer, primary_key=True)
-    val_orcamento_real = db.Column(db.Float(64))
-    val_orcamento_previsto = db.Column(db.Float(64))
+    val_orcamento_real = db.Column(db.Float(40))
+    val_orcamento_previsto = db.Column(db.Float(40))
     mes_orcamento = db.Column(db.String(), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
      
@@ -173,7 +173,7 @@ class TransacaoEntrada(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dsc_entrada = db.Column(db.String(64), nullable=False)
     dat_entrada = db.Column(db.Date(), nullable=False)
-    val_entrada = db.Column(db.Float(64))
+    val_entrada = db.Column(db.Float(40))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))    
 
     # def __repr__(self):
@@ -190,7 +190,7 @@ class TransacaoSaida(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dsc_saida = db.Column(db.String(64), nullable=False)
     dat_saida = db.Column(db.Date(), nullable=False)
-    val_saida = db.Column(db.Float(64))
+    val_saida = db.Column(db.Float(40))
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     
@@ -241,7 +241,7 @@ class TransacaoCofrinho(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tip_transacao = db.Column(db.String(64), nullable=False)
     dat_transacao = db.Column(db.Date(), nullable=False)
-    val_cofrinho = db.Column(db.Float(64), nullable=False)
+    val_cofrinho = db.Column(db.Float(40), nullable=False)
     cod_usuario = db.Column(db.Integer, db.ForeignKey('usuarios.id'))
     cod_objetivo = db.Column(db.Integer, db.ForeignKey('objetivos.id'))
 

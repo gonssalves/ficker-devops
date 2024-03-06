@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ficker_db
+      POSTGRES_USER: ficker
+      POSTGRES_PASSWORD: ficker
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+    ports:
+      - 5432:5432
+
+  web:
+    image: ficker:1.16
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8080:8080

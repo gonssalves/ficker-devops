@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define a role padrão como "ficker"
+export PGUSER=ficker
+
 flask db init
 flask db migrate -m "Initial migration"
-flask db upgrade 
+flask db upgrade
