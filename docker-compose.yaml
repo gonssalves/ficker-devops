@@ -9,12 +9,13 @@ services:
       POSTGRES_USER: ficker
       POSTGRES_PASSWORD: ficker
     volumes:
-      - /var/run/postgresql:/var/run/postgresql
+      #- /var/run/postgresql:/var/run/postgresql
+      - ./data/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
   web:
-    image: ficker:1.16
+    image: ficker:1.18
     volumes:
       - .:/usr/src/app
     ports:
