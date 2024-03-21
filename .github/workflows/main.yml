@@ -31,5 +31,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: user/ficker:latest
+          tags: ghcr.io/gonssalves/ficker:latest
           
