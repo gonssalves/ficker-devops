@@ -50,7 +50,4 @@ jobs:
         run: pip install requests
       -
         name: Start application
-        run: docker run -d -p 8080:8080 ghcr.io/gonssalves/ficker:latest # Executa a imagem em um contêiner em segundo plano
-      -
-        name: Execute Flask command
-        run: docker exec <container_id> flask run --app app --debug # Substitua <container_id> pelo ID do contêiner
+        run: docker run -d -p 8080:8080 -e FLASK_ENV=development ghcr.io/gonssalves/ficker:latest

@@ -71,6 +71,9 @@ app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
 
 if __name__ == '__main__':
-    # Executa o aplicativo Flask usando o Gunicorn para produção
     import os
-    os.system('gunicorn -b 0.0.0.0:8080 app:app')
+    if os.getenv('FLASK_ENV') == 'development':
+        app.run(debug=True, host='0.0.0.0', port=8080)
+    else:
+        # Executa o aplicativo Flask usando o Gunicorn para produção
+        os.system('gunicorn -b 0.0.0.0:8080 app:app')
