@@ -59,7 +59,7 @@ jobs:
       -
         name: Run docker image
         run: |
-          docker run -d -p 5000:5000 ficker:latest
+          docker run -d -p 5000:5000 ficker
           sleep 5 
       -
         name: Run tests
