@@ -46,14 +46,17 @@ jobs:
         with:
           python-version: '3.x'
       -
+        name: Create virtual environment
+        run: python -m venv venv
+      -
+        name: Activate virtual environment
+        run: source venv/bin/activate
+      -
         name: Install dependencies
         run: pip install -r requirements.txt
       -
         name: Start application
         run: python app.py & # & roda no background
-      -
-        name: Activate virtual env
-        run: . venv/bin/activate
       -
         name: Run tests
         run: python tests/test_example.py
