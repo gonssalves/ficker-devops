@@ -52,5 +52,8 @@ jobs:
         name: Start application
         run: python app.py & # & roda no background
       -
+        name: Activate virtual env
+        run: . venv/bin/activate
+      -
         name: Run tests
         run: python tests/test_example.py
