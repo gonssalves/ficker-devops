@@ -51,3 +51,6 @@ jobs:
       -
         name: Start application
         run: docker run -d -p 8080:8080 -e FLASK_ENV=development ghcr.io/gonssalves/ficker:latest
+      -
+        name: Run tests
+        run: python tests/test_example.py
