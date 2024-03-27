@@ -26,9 +26,6 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Install dependency
-        run: pip install requests
-      -
         name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -56,6 +53,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+      -
+        name: Install dependency
+        run: pip install requests
       -
         name: Run tests
         run: python tests/test_example.py
