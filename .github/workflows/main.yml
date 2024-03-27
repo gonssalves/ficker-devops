@@ -47,4 +47,4 @@ jobs:
           python-version: '3.x'
       -
         name: Run tests
-        run: python test_example.py
+        run: python test/test_example.py
