@@ -3,7 +3,7 @@ import requests
 
 class TestFlaskApp(unittest.TestCase):
     def setUp(self):
-        self.base_url = 'http://127.0.0.1:5000'
+        self.base_url = 'http://localhost:5000'
 
     def test_index_route(self):
         response = requests.get(self.base_url + '/test')
