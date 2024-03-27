@@ -44,15 +44,15 @@ jobs:
         - 5000
       volumes:
         - my_docker_volume:/volume_mount
-    # steps:
-    #   -
-    #     name: Checkout
-    #     uses: actions/checkout@v4
-    #   -
-    #     name: Set up Python
-    #     uses: actions/setup-python@v2
-    #     with:
-    #       python-version: '3.x'
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
     #   -
     #     name: Install dependency
     #     run: pip install requests
