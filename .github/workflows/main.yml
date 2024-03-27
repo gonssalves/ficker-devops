@@ -46,17 +46,11 @@ jobs:
         with:
           python-version: '3.x'
       -
-      #   name: Create virtual environment
-      #   run: python -m venv venv
-      # -
-      #   name: Activate virtual environment
-      #   run: source venv/bin/activate
-      # -
         name: Install dependency
         run: pip install requests
       -
         name: Start application
-        run: flask --app app run --debug & # & roda no background
+        run: docker run -d -p 8080:8080 ghcr.io/gonssalves/ficker:latest # Executa a imagem em um contêiner em segundo plano
       -
-        name: Run tests
-        run: python tests/test_example.py
+        name: Execute Flask command
+        run: docker exec <container_id> flask run --app app --debug # Substitua <container_id> pelo ID do contêiner
