@@ -49,5 +49,8 @@ jobs:
         name: Install dependencies
         run: pip install requests
       -
+        name: Start application
+        run: python app.py & # & roda no background
+      -
         name: Run tests
         run: python tests/test_example.py
