@@ -53,14 +53,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-    #   -
-    #     name: Install dependency
-    #     run: pip install requests
-    #   -
-    #     name: Run docker image
-    #     run: |
-    #       docker run -d -p 5000:5000 ficker:latest
-    #       sleep 5 
-    #   -
-    #     name: Run tests
-    #     run: python tests/test_example.py
+      -
+        name: Install dependency
+        run: pip install requests
+      -
+        name: Run docker image
+        run: |
+          docker run -d -p 5000:5000 ficker:latest
+          sleep 5 
+      -
+        name: Run tests
+        run: python tests/test_example.py
