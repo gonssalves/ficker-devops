@@ -57,10 +57,5 @@ jobs:
         name: Install dependency
         run: pip install requests
       -
-        name: Run docker image
-        run: |
-          docker run -d -p 5000:5000 ficker
-          sleep 5 
-      -
         name: Run tests
         run: python tests/test_example.py
