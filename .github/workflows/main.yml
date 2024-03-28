@@ -37,5 +37,8 @@ jobs:
         ports:
           - 5000:5000
     steps:
+      - name: Esperar até o contêiner estar pronto
+        run: sleep 10
+
       - name: Executar comandos dentro do contêiner
         run: docker exec ficker echo "Hello from inside the container"
