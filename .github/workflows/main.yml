@@ -46,17 +46,17 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v4
+      # -
+      #   name: Set up Python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: '3.x'
       -
-        name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      -
-        name: Install dependency
-        run: pip install requests
-      -
+        # name: Install dependency
+        # run: pip install requests
+      # -
         name: Run ls and pwd
         run: ls && pwd
       -
         name: Run tests
-        run: python tests/app.py
+        run: python app.py
