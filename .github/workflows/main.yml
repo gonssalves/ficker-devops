@@ -47,7 +47,10 @@ jobs:
     steps:  
       - name: Checkout
         uses: actions/checkout@v4
-
+      
+      - name: Run ls
+        run: ls
+      
       - name: Run tests
         run: |
-          python app.py
+          python tests/test_example.py
