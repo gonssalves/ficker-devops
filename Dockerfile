@@ -6,7 +6,6 @@ COPY . /app
 
 # Instala as dependências do Flask, se houver
 RUN pip install -r requirements.txt
-RUN pip install requests
 
 EXPOSE 8080
 
