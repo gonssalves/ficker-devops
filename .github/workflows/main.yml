@@ -47,4 +47,4 @@ jobs:
         run: dockerize -wait tcp://localhost:5000 -timeout 1m
 
       - name: Executar comandos dentro do contêiner
-        run: docker exec ficker echo "Hello from inside the container"
+        run: docker exec ficker echo "Hello from inside the cotainer"
