@@ -39,6 +39,12 @@ jobs:
       image: ghcr.io/gonssalves/ficker:latest
       env:
         FLASK_ENV: development
+    services:
+      app:
+        image: ghcr.io/gonssalves/ficker:latest
+        ports:
+          - 5000:5000
+
     steps:
 
       - name: Run tests
