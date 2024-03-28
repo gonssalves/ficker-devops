@@ -7,7 +7,6 @@ from flask_mailing import Mail
 from views.main import main as view_main
 from views.auth import auth as view_auth
 from dotenv import load_dotenv
-from gunicorn import gunicorn
 
 import os, sentry_sdk
 
