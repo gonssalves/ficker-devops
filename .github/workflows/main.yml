@@ -42,6 +42,9 @@ jobs:
         FLASK_ENV: development
       ports:
         - 5000
+      volumes:
+        - .:/app
+
     steps:
       -
         name: Checkout
