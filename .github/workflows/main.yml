@@ -53,7 +53,7 @@ jobs:
           python-version: '3.x'
       -
         name: Install dependency
-        run:  pip install requests
+        run:  . venv/bin/activate && pip install requests
       -
         name: Run tests
         run: python tests/test_example.py
