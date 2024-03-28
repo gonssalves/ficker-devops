@@ -36,6 +36,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: build
+    container:
+      image: ghcr.io/gonssalves/ficker:latest
+      env:
+        FLASK_ENV: development
+      ports:
+        - 5000
     steps:
       -
         name: Checkout
