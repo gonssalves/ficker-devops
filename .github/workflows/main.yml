@@ -151,3 +151,7 @@ jobs:
       - 
         name: Configure database user and password
         run: gcloud sql users create ficker --instance=my-instance --password=ficker
+      -
+        name: Migrate database
+        run: |
+          curl -X POST https://red-ficker-4btlszmkiq-uc.a.run.app/migrate-db

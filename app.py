@@ -71,13 +71,15 @@ def load_user(user_id):
 app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
 
-@app.route('/migrate-db', methods=['GET'])
+@app.route('/migrate-db', methods=['POST'])
 def migrate_db():
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             # Aplicar migrações ao banco de dados
-            db.create_all()
-            return 'Migrações do banco de dados aplicadas com sucesso!', 200
+            with app.app_context():
+                db.engine.execute("CREATE DATABASE IF NOT EXISTS ficker_db;")
+                db.create_all()
+                return 'Migrações do banco de dados aplicadas com sucesso!', 200
         except Exception as e:
             return f'Erro ao aplicar migrações do banco de dados: {str(e)}', 500
     else:
