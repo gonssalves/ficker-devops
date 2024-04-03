@@ -106,7 +106,7 @@ jobs:
       id: 'deploy'
       uses: 'google-github-actions/deploy-cloudrun@v2'
       with:
-        service: 'hello-cloud-run'
+        service: 'red-ficker'
         image: 'us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest'
     - 
       name: 'Use output'
@@ -149,9 +149,3 @@ jobs:
       - 
         name: Configure database user and password
         run: gcloud sql users create ficker --instance=my-instance --password=ficker
-      - 
-        name: Run migration script
-        run: |
-          flask db init
-          flask db migrate -m "Initial migration"
-          flask db upgrade
