@@ -87,7 +87,7 @@ jobs:
         run: |
           docker push us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest
  
-  deploy-cloud-run:
+  deploy-app:
     runs-on: ubuntu-latest
     needs: push-to-gcr 
     permissions:
@@ -114,8 +114,13 @@ jobs:
 
   deploy-postgresql:
     runs-on: ubuntu-latest
-    needs: deploy-cloud-run
+    needs: deploy-app
     steps:
+      - 
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{secrets.GCP_AUTH_KEY}}'
       - 
         name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
