@@ -4,12 +4,32 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mailing import Mail
+import sqlalchemy
 from views.main import main as view_main
 from views.auth import auth as view_auth
 from dotenv import load_dotenv
 from sqlalchemy import text
 
 import os, sentry_sdk
+
+# Função para conectar ao banco de dados usando um socket Unix
+def connect_unix_socket():
+    """Inicializa um pool de conexão usando um socket Unix para uma instância do Cloud SQL do PostgreSQL."""
+    db_user = os.environ["DB_USER"]  # Substitua pelo nome de usuário do seu banco de dados
+    db_pass = os.environ["DB_PASS"]  # Substitua pela senha do seu banco de dados
+    db_name = os.environ["DB_NAME"]  # Substitua pelo nome do seu banco de dados
+    unix_socket_path = os.environ["INSTANCE_UNIX_SOCKET"]  # Substitua pelo caminho do soquete Unix da sua instância do Cloud SQL
+
+    pool = sqlalchemy.create_engine(
+            sqlalchemy.engine.url.URL.create(
+            drivername="postgresql+pg8000",
+            username=db_user,
+            password=db_pass,
+            database=db_name,
+            query={"unix_sock": f"{unix_socket_path}/.s.PGSQL.5432"},
+        )
+    )
+    return pool
 
 # Função para criar o aplicativo Flask
 def create_app():
@@ -44,13 +64,7 @@ def create_app():
         profiles_sample_rate=1.0,
     )
 
-    INSTANCE_UNIX_SOCKET= "/cloudsql/my-instance"
-    INSTANCE_UNIX_SOCKET = "my-instance"
-    INSTANCE_CONNECTION_NAME = "my-instance"
-    DB_NAME = "ficker"
-    DB_USER = "ficker"
-    DB_PASS = "ficker"
-
+    db_pool = connect_unix_socket()
 
     return app
 
