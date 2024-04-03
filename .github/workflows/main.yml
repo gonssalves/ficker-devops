@@ -78,11 +78,11 @@ jobs:
       - 
         name: 'Tag image for GCR'
         run: |
-          docker tag ghcr.io/gonssalves/red-ficker:latest gcr.io/cinfo-devops-2023-2/docker/red-ficker:latest
+          docker tag ghcr.io/gonssalves/red-ficker:latest us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest
       - 
         name: 'Google Cloud CLI'
         run: gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker
       - 
         name: 'Push image to GCR'
         run: |
-          docker push gcr.io/cinfo-devops-2023-2/docker/red-ficker:latest
+          docker push us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest
