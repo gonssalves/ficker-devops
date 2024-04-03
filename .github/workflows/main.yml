@@ -111,3 +111,24 @@ jobs:
     - 
       name: 'Use output'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
+
+  deploy-postgresql:
+    runs-on: ubuntu-latest
+    needs: deploy-cloud-run
+    steps:
+      - 
+        name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+      - 
+        name: Create Cloud SQL instance
+        run: gcloud sql instances create my-instance --database-version=POSTGRES_12 --tier=db-f1-micro --region=us-central1
+      - 
+        name: Create database
+        run: gcloud sql databases create my-database --instance=my-instance
+      - 
+        name: Configure database user and password
+        run: gcloud sql users create ficker --instance=my-instance --password=ficker
+      - 
+        name: Run migration script
+        run: |
+          . commands/migrate.sh
