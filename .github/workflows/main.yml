@@ -1,4 +1,4 @@
-name: Deploy Image to GHCR
+name: Push Image to Artifact Registry
 
 on:
   push:
