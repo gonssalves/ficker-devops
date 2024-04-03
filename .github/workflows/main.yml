@@ -59,13 +59,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Authenticate to Google Cloud and configure Docker
-        uses: google-github-actions/setup-gcloud@v0
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          project_id: cinfo-devops-2023-2
-          service_account_key: ${{secrets.GCP_AUTH_KEY}}
-          export_default_credentials: true
-          
+          credentials_json: '${{secrets.GCP_AUTH_KEY}}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
       # - name: Pull image from GHCR
       #   run: |
       #     docker pull ghcr.io/gonssalves/ficker:latest
