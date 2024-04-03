@@ -8,7 +8,7 @@ class TestFlaskApp(unittest.TestCase):
     def test_index_route(self):
         response = requests.get(self.base_url + '/test', timeout=10)  # Tempo de espera de 10 segundos
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.text, 'Hello, world!')
+        self.assertEqual(response.text, 'Hell, world!')
 
 if __name__ == '__main__':
     unittest.main()
