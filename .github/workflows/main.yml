@@ -1,4 +1,4 @@
-name: Push Image to Artifact Registry
+name: Deploy Image to Cloud Run
 
 on:
   push:
@@ -86,3 +86,25 @@ jobs:
         name: 'Push image to GCR'
         run: |
           docker push us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest
+ 
+  deploy-cloud-run:
+    runs-on: ubuntu-latest
+    needs: push-to-gcr 
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+    - 
+      uses: 'google-github-actions/auth@v2'
+      with:
+        workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+        service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+    - 
+      id: 'deploy'
+      uses: 'google-github-actions/deploy-cloudrun@v2'
+      with:
+        service: 'hello-cloud-run'
+        image: 'us-central1-docker.pkg.dev/cinfo-devops-2023-2/docker/red-ficker:latest'
+    - 
+      name: 'Use output'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
