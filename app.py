@@ -64,8 +64,6 @@ def create_app():
         profiles_sample_rate=1.0,
     )
 
-    db_pool = connect_unix_socket()
-
     return app
 
 # Cria o aplicativo Flask
@@ -114,4 +112,5 @@ if __name__ == '__main__':
         app.run(debug=True, host='0.0.0.0', port=5000)
     else:
         # Executa o aplicativo Flask usando o Gunicorn para produção
+        db_pool = connect_unix_socket()
         os.system('gunicorn -b 0.0.0.0:8080 app:app')
