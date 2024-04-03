@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -71,6 +71,18 @@ def load_user(user_id):
 app.register_blueprint(view_main)
 app.register_blueprint(view_auth)
 
+@app.route('/migrate-db', methods=['GET'])
+def migrate_db():
+    if request.method == 'GET':
+        try:
+            # Aplicar migrações ao banco de dados
+            db.create_all()
+            return 'Migrações do banco de dados aplicadas com sucesso!', 200
+        except Exception as e:
+            return f'Erro ao aplicar migrações do banco de dados: {str(e)}', 500
+    else:
+        return 'Método não suportado', 405
+    
 if __name__ == '__main__':
     import os
     if os.getenv('FLASK_ENV') == 'development':

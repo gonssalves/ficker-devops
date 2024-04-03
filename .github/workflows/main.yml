@@ -1,4 +1,4 @@
-name: Deploy Image to Cloud Run
+name: Deploy App to Cloud Run
 
 on:
   push:
