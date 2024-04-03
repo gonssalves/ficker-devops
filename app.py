@@ -13,23 +13,23 @@ from sqlalchemy import text
 import os, sentry_sdk
 
 # Função para conectar ao banco de dados usando um socket Unix
-def connect_unix_socket():
-    """Inicializa um pool de conexão usando um socket Unix para uma instância do Cloud SQL do PostgreSQL."""
-    db_user = os.environ["DB_USER"]  # Substitua pelo nome de usuário do seu banco de dados
-    db_pass = os.environ["DB_PASS"]  # Substitua pela senha do seu banco de dados
-    db_name = os.environ["DB_NAME"]  # Substitua pelo nome do seu banco de dados
-    unix_socket_path = os.environ["INSTANCE_UNIX_SOCKET"]  # Substitua pelo caminho do soquete Unix da sua instância do Cloud SQL
+# def connect_unix_socket():
+#     """Inicializa um pool de conexão usando um socket Unix para uma instância do Cloud SQL do PostgreSQL."""
+#     db_user = os.environ["DB_USER"]  # Substitua pelo nome de usuário do seu banco de dados
+#     db_pass = os.environ["DB_PASS"]  # Substitua pela senha do seu banco de dados
+#     db_name = os.environ["DB_NAME"]  # Substitua pelo nome do seu banco de dados
+#     unix_socket_path = os.environ["INSTANCE_UNIX_SOCKET"]  # Substitua pelo caminho do soquete Unix da sua instância do Cloud SQL
 
-    pool = sqlalchemy.create_engine(
-            sqlalchemy.engine.url.URL.create(
-            drivername="postgresql+pg8000",
-            username=db_user,
-            password=db_pass,
-            database=db_name,
-            query={"unix_sock": f"{unix_socket_path}/.s.PGSQL.5432"},
-        )
-    )
-    return pool
+#     pool = sqlalchemy.create_engine(
+#             sqlalchemy.engine.url.URL.create(
+#             drivername="postgresql+pg8000",
+#             username=db_user,
+#             password=db_pass,
+#             database=db_name,
+#             query={"unix_sock": f"{unix_socket_path}/.s.PGSQL.5432"},
+#         )
+#     )
+#     return pool
 
 # Função para criar o aplicativo Flask
 def create_app():
