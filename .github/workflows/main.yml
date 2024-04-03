@@ -41,7 +41,7 @@ jobs:
         uses: actions/checkout@v4
       -
         name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       -
@@ -80,4 +80,4 @@ jobs:
 
       - name: 'Push image to GCR'
         run: |
-          docker push gcr.io/cinfo-devops-2023-2/red-ficker:latest
+          docker push gcr.io/cinfo-devops-2023-2/docker/red-ficker:latest
