@@ -128,7 +128,7 @@ jobs:
         name: Check if Cloud SQL instance exists
         id: check-instance
         run: |
-          gcloud sql instances describe my-instance-name --project=${{ secrets.GCP_PROJECT_ID }} --quiet
+          gcloud sql instances describe my-instance --project=${{secrets.GCP_PROJECT_ID}} --quiet
           echo "::set-output name=instance_exists::true"
         continue-on-error: true
       - name: Create Cloud SQL instance if it does not exist
