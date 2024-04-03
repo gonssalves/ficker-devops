@@ -136,4 +136,6 @@ jobs:
       - 
         name: Run migration script
         run: |
-          . commands/migrate.sh
+          flask db init
+          flask db migrate -m "Initial migration"
+          flask db upgrade
