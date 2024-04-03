@@ -130,24 +130,24 @@ jobs:
         name: Check if Cloud SQL instance exists
         id: check-instance
         run: |
-          gcloud sql instances describe red-ficker --project=${{secrets.GCP_PROJECT_ID}} --quiet
+          gcloud sql instances describe my-instance --project=${{secrets.GCP_PROJECT_ID}} --quiet
           echo "::set-output name=instance_exists::true"
         continue-on-error: true
       - 
         name: Create Cloud SQL instance if it does not exist
         if: steps.check-instance.outputs.instance_exists != 'true'
-        run: gcloud sql instances create red-ficker --database-version=POSTGRES_12 --tier=db-f1-micro --region=us-central1
+        run: gcloud sql instances create my-instance --database-version=POSTGRES_12 --tier=db-f1-micro --region=us-central1
       - 
         name: Check if database exists
         id: check-database
         run: |
-          gcloud sql databases describe ficker --instance=red-ficker --project=${{secrets.GCP_PROJECT_ID}} --quiet
+          gcloud sql databases describe ficker --instance=my-instance --project=${{secrets.GCP_PROJECT_ID}} --quiet
           echo "::set-output name=database_exists::true"
         continue-on-error: true
       - 
         name: Create database if it does not exist
         if: steps.check-database.outputs.database_exists != 'true'
-        run: gcloud sql databases create ficker --instance=red-ficker --project=${{secrets.GCP_PROJECT_ID}}
+        run: gcloud sql databases create ficker --instance=my-instance --project=${{secrets.GCP_PROJECT_ID}}
       - 
         name: Configure database user and password
-        run: gcloud sql users create ficker --instance=red-ficker --password=ficker
+        run: gcloud sql users create ficker --instance=my-instance --password=ficker
