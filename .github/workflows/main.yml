@@ -125,8 +125,15 @@ jobs:
         name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
       - 
-        name: Create Cloud SQL instance
-        run: gcloud sql instances create my-instance --database-version=POSTGRES_12 --tier=db-f1-micro --region=us-central1
+        name: Check if Cloud SQL instance exists
+        id: check-instance
+        run: |
+          gcloud sql instances describe my-instance-name --project=${{ secrets.GCP_PROJECT_ID }} --quiet
+          echo "::set-output name=instance_exists::true"
+        continue-on-error: true
+      - name: Create Cloud SQL instance if it does not exist
+        if: steps.check-instance.outputs.instance_exists != 'true'
+        run: gcloud sql instances create my-instance-name --database-version=POSTGRES_12 --tier=db-f1-micro --region=us-central1
       - 
         name: Create database
         run: gcloud sql databases create my-database --instance=my-instance
