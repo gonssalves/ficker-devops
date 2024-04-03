@@ -7,6 +7,7 @@ from flask_mailing import Mail
 from views.main import main as view_main
 from views.auth import auth as view_auth
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 import os, sentry_sdk
 
@@ -77,7 +78,7 @@ def migrate_db():
         try:
             # Aplicar migrações ao banco de dados
             with app.app_context():
-                db.session.execute("CREATE DATABASE IF NOT EXISTS ficker_db;")
+                db.session.execute(text("CREATE DATABASE IF NOT EXISTS ficker_db;"))
                 db.create_all()
                 return 'Migrações do banco de dados aplicadas com sucesso!', 200
         except Exception as e:
