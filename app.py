@@ -44,6 +44,14 @@ def create_app():
         profiles_sample_rate=1.0,
     )
 
+    INSTANCE_UNIX_SOCKET= "/cloudsql/my-instance"
+    INSTANCE_UNIX_SOCKET = "my-instance"
+    INSTANCE_CONNECTION_NAME = "my-instance"
+    DB_NAME = "ficker"
+    DB_USER = "ficker"
+    DB_PASS = "ficker"
+
+
     return app
 
 # Cria o aplicativo Flask
