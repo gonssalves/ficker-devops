@@ -1,5 +1,7 @@
 # Personal Finance Tracker - Ficker
 
+[![Qodana](https://github.com/gonssalves/ficker-devops/actions/workflows/code_quality.yml/badge.svg)](https://github.com/gonssalves/ficker-devops/actions/workflows/code_quality.yml)
+
 ## Configuration
 You should have Python and virtual environment (preferentially) on your machine.
 * Use <em>pip install -r requirements.txt</em> to install the packages.
