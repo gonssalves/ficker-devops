@@ -3,7 +3,7 @@ name: Deploy App to Cloud Run
 on:
   push:
     branches:
-      - "main"
+      - "dev-ops"
       
 jobs:
   build:
