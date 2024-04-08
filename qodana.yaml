@@ -1,3 +1,24 @@
 version: "1.0"
 linter: jetbrains/qodana-python-community:2023.3
 bootstrap: pip install -r requirements.txt
+include:
+  - name: CheckEmptyScriptTag
+  - name: HtmlUnknownBooleanAttribute
+  - name: CheckValidXmlInScriptTagBody
+  - name: HtmlMissingClosingTag
+  - name: RequiredAttributes
+  - name: HtmlExtraClosingTag
+  - name: HtmlUnknownAttribute
+  - name: HtmlUnknownTag
+  - name: HtmlUnknownTarget
+  - name: HtmlUnknownAnchorTarget
+  - name: HtmlWrongAttributeValue
+  - name: PyInterpreterInspection
+  - name: PyAugmentAssignmentInspection
+  - name: PyClassicStyleClassInspection
+  - name: PyCompatibilityInspection
+  - name: PyMissingTypeHintsInspection
+  - name: PyMissingOrEmptyDocstringInspection
+  - name: PyMandatoryEncodingInspection
+  - name: PyArgumentEqualDefaultInspection
+  - name: PyUnresolvedReferencesInspection
