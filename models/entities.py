@@ -147,14 +147,15 @@ class Usuario(db.Model, UserMixin):
     
         for objetivo in self.objetivos_u:
             total = 0
+            dicio = {'name': objetivo.nom_objetivo, 'value': total, 'color': objetivo.cor_objetivo}  # Initialize 'dicio' outside of the inner loop
             for transacao in self.transacoes_cofrinho_u: 
                 if objetivo.id == transacao.cod_objetivo:
                     if transacao.tip_transacao == 'Guardar':
                         total += transacao.val_cofrinho
-                        dicio = {'name': objetivo.nom_objetivo, 'value': total, 'color': objetivo.cor_objetivo}
+                        dicio['value'] = total  # Update the 'value' key of 'dicio'
                     else:
                         total -= transacao.val_cofrinho
-                        dicio = {'name': objetivo.nom_objetivo, 'value': total, 'color': objetivo.cor_objetivo}
+                        dicio['value'] = total  # Update the 'value' key of 'dicio'
             l.append(dicio)
                
         return l
