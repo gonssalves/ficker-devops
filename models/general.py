@@ -4,6 +4,7 @@ from flask_login import current_user
 from app import db
 from sqlalchemy import exc
 from datetime import datetime
+from builtins import int
 
 def add_income():
     income_description = request.form.get('description')
