@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8080
 
-CMD exec python3 app.py
+CMD . commands/initial_migrate.sh && exec python3 app.py
