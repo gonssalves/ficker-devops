@@ -56,9 +56,10 @@ def auth_recovery():
     if user:
         password = user.sen_usuario
         #Define email sender and receiver
-        from secret import EMAIL_SENDER, EMAIL_PASSWORD
-        email_sender = EMAIL_SENDER
-        email_password = EMAIL_PASSWORD
+        #from secret import EMAIL_SENDER, EMAIL_PASSWORD
+        
+        email_sender = "contacttrepverter@gmail.com"
+        email_password = "umas senha que não me lembro mais"
         email_receiver = email
 
         #Set the subject and body of the email
