@@ -47,6 +47,10 @@ Shell scripts foram utilizados para separar os estágios de execução da aplica
 
 <b>VI. Processes</b>
 
+Status de Implementação: ✅
+
+Foi utilizado o Servidor WSGI Gunicorn para executar a aplicação em produção com múltiplos workers, cada um sendo um processo separado que pode lidar com solicitações HTTP.
+
 <b>VII. Port Binding:</b>
 
 Status de Implementação: ✅
@@ -55,7 +59,15 @@ A aplicação está configurada para receber requisições na porta 8080 (postgr
 
 <b>VIII. Concurrency:</b>
 
+Status de Implementação: ✅
+
+Foi usado o Celery para tarefas em segundo plano, permitindo que a aplicação distribua a carga de trabalho de forma eficiente, processando tarefas assíncronas em paralelo com solitações HTTP principais.
+
 <b>IX. Disposability:</b>
+
+Status de Implementação: ✅
+
+Pelo fato da aplicação ser dockerizada, os containers podem ser iniciados, parados e substituídos rapidamente, conforme necessário.
 
 <b>X. Dev/Prod Parity:</b>
 
