@@ -56,8 +56,9 @@ def auth_recovery():
     if user:
         password = user.sen_usuario
         #Define email sender and receiver
-        email_sender = os.environ["EMAIL_SENDER"]
-        email_password = os.environ["EMAIL_PASSWORD"]
+        from secret import EMAIL_SENDER, EMAIL_PASSWORD
+        email_sender = EMAIL_SENDER
+        email_password = EMAIL_PASSWORD
         email_receiver = email
 
         #Set the subject and body of the email
