@@ -7,6 +7,7 @@ import re
 from email.message import EmailMessage
 import smtplib
 import ssl
+import os
 
 def auth_login():
     '''' Verifica se o usuário existe no banco de dados e se a senha está correta. '''
@@ -55,9 +56,8 @@ def auth_recovery():
     if user:
         password = user.sen_usuario
         #Define email sender and receiver
-        from secret import EMAIL_SENDER, EMAIL_PASSWORD
-        email_sender = EMAIL_SENDER
-        email_password = EMAIL_PASSWORD
+        email_sender = os.environ["EMAIL_SENDER"]
+        email_password = os.environ["EMAIL_PASSWORD"]
         email_receiver = email
 
         #Set the subject and body of the email
